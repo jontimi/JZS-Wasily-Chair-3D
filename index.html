@@ -20,13 +20,24 @@
       border-radius: 10px;
       box-shadow: 0 0 30px rgba(0,0,0,0.1);
     }
+    .selector {
+      margin-bottom: 1.5em;
+      font-size: 1.1em;
+      padding: 0.5em 1em;
+    }
   </style>
 </head>
 <body>
   <h1>3D Model Viewer with AR</h1>
+  <label for="model-select">Choose a model:</label>
+  <select id="model-select" class="selector">
+    <option value="ArmadilloV2.glb">ArmadilloV2</option>
+    <option value="Armadillo.glb">Armadillo</option>
+  </select>
   <model-viewer
+    id="viewer"
     src="ArmadilloV2.glb"
-    alt="Armadillo 3D model"
+    alt="3D model"
     ar
     ar-modes="scene-viewer webxr quick-look"
     camera-controls
@@ -38,5 +49,13 @@
     </button>
   </model-viewer>
   <p>Share your 3D models with AR support using <a href="https://modelviewer.dev/" target="_blank">model-viewer</a>!</p>
+  <script>
+    const select = document.getElementById('model-select');
+    const viewer = document.getElementById('viewer');
+    select.addEventListener('change', () => {
+      viewer.src = select.value;
+      viewer.alt = select.options[select.selectedIndex].text + ' 3D model';
+    });
+  </script>
 </body>
 </html>
