@@ -1,0 +1,11 @@
+{
+  "Furniture": [
+    "Furniture/HiveShelf90cm.glb",
+    "Furniture/ShiraTableAI.glb",
+    "Furniture/SlimClosetAce.glb"
+  ],
+  "Animals": [
+    "animals/Armadillo.glb",
+    "animals/ArmadilloV2.glb"
+  ]
+}
