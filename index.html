@@ -25,18 +25,29 @@
       font-size: 1.1em;
       padding: 0.5em 1em;
     }
+    optgroup {
+      font-style: normal;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>3D Model Viewer with AR</h1>
   <label for="model-select">Choose a model:</label>
   <select id="model-select" class="selector">
-    <option value="ArmadilloV2.glb">ArmadilloV2</option>
-    <option value="Armadillo.glb">Armadillo</option>
+    <optgroup label="Furniture">
+      <option value="Furniture/HiveShelf90cm.glb">HiveShelf90cm</option>
+      <option value="Furniture/ShiraTableAI.glb">ShiraTableAI</option>
+      <option value="Furniture/SlimClosetAce.glb">SlimClosetAce</option>
+    </optgroup>
+    <optgroup label="Animals">
+      <option value="animals/Armadillo.glb">Armadillo</option>
+      <option value="animals/ArmadilloV2.glb">ArmadilloV2</option>
+    </optgroup>
   </select>
   <model-viewer
     id="viewer"
-    src="ArmadilloV2.glb"
+    src="Furniture/HiveShelf90cm.glb"
     alt="3D model"
     ar
     ar-modes="scene-viewer webxr quick-look"
