@@ -34,39 +34,57 @@
 <body>
   <h1>3D Model Viewer with AR</h1>
   <label for="model-select">Choose a model:</label>
-  <select id="model-select" class="selector">
-    <optgroup label="Furniture">
-      <option value="Furniture/HiveShelf90cm.glb">HiveShelf90cm</option>
-      <option value="Furniture/ShiraTableAI.glb">ShiraTableAI</option>
-      <option value="Furniture/SlimClosetAce.glb">SlimClosetAce</option>
-    </optgroup>
-    <optgroup label="Animals">
-      <option value="animals/Armadillo.glb">Armadillo</option>
-      <option value="animals/ArmadilloV2.glb">ArmadilloV2</option>
-    </optgroup>
-  </select>
+  <select id="model-select" class="selector"></select>
   <model-viewer
     id="viewer"
-    src="Furniture/HiveShelf90cm.glb"
+    src=""
     alt="3D model"
     ar
     ar-modes="scene-viewer webxr quick-look"
     camera-controls
     auto-rotate
     shadow-intensity="1"
-    style="width: 100%; height: 500px;">
+    style="width: 100%; height: 500px;"
+  >
     <button slot="ar-button" style="background:#0078D4; color:white; padding:1em; border:none; border-radius:5px;">
       View in your space (AR)
     </button>
   </model-viewer>
   <p>Share your 3D models with AR support using <a href="https://modelviewer.dev/" target="_blank">model-viewer</a>!</p>
   <script>
-    const select = document.getElementById('model-select');
-    const viewer = document.getElementById('viewer');
-    select.addEventListener('change', () => {
-      viewer.src = select.value;
-      viewer.alt = select.options[select.selectedIndex].text + ' 3D model';
-    });
+    fetch('models.json')
+      .then(response => response.json())
+      .then(models => {
+        const select = document.getElementById('model-select');
+        let firstModelSrc = '';
+        for (const category in models) {
+          const optgroup = document.createElement('optgroup');
+          optgroup.label = category;
+          models[category].forEach(modelPath => {
+            const name = modelPath.split('/').pop().replace('.glb','');
+            const option = document.createElement('option');
+            option.value = modelPath;
+            option.text = name;
+            optgroup.appendChild(option);
+            if (!firstModelSrc) firstModelSrc = modelPath;
+          });
+          select.appendChild(optgroup);
+        }
+        // Set the first model as default
+        const viewer = document.getElementById('viewer');
+        select.value = firstModelSrc;
+        viewer.src = firstModelSrc;
+        viewer.alt = select.options[select.selectedIndex].text + ' 3D model';
+
+        select.addEventListener('change', () => {
+          viewer.src = select.value;
+          viewer.alt = select.options[select.selectedIndex].text + ' 3D model';
+        });
+      })
+      .catch(err => {
+        document.getElementById('model-select').innerHTML = '<option>Error loading models.json</option>';
+        console.error(err);
+      });
   </script>
 </body>
 </html>
