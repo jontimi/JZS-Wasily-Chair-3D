@@ -1,7 +1,8 @@
 {
   "Furniture": [
     "Furniture/HiveShelf90cm.glb",
-    "Furniture/Sittingtable.glb",
+    "Furniture/Sittingtable.glb", 
+    "Furniture/ROMAcouchTripoAIcompressed.glb", 
     "Furniture/ShiraTableAI.glb",
     "Furniture/SlimClosetAce.glb"
   ],
