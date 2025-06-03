@@ -53,7 +53,10 @@
   <p>Share your 3D models with AR support using <a href="https://modelviewer.dev/" target="_blank">model-viewer</a>!</p>
   <script>
     fetch('models.json')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) throw new Error("models.json not found or invalid!");
+        return response.json();
+      })
       .then(models => {
         const select = document.getElementById('model-select');
         let firstModelSrc = '';
