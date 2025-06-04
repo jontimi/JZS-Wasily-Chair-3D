@@ -3,313 +3,344 @@
 <head>
   <meta charset="UTF-8">
   <title>3D Model Viewer with AR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap">
   <style>
     :root {
-      --bg-light: #f7f7f7;
-      --bg-dark: #181818;
-      --text-light: #222;
-      --text-dark: #fafafa;
-      --accent: #0078D4;
-      --card-bg-light: #fff;
+      --primary: #0078D4;
+      --bg: #f7f7f7;
+      --bg-dark: #1a1a1a;
+      --text: #222;
+      --text-dark: #eee;
+      --card-bg: #fff;
       --card-bg-dark: #232323;
     }
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: var(--bg-light);
-      color: var(--text-light);
-      transition: background .3s, color .3s;
+      font-family: 'Inter', Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
     }
-    .dark-mode {
+    body.dark {
       background: var(--bg-dark);
       color: var(--text-dark);
     }
-    header {
-      text-align: center;
-      padding: 2em 1em 1em 1em;
+    .container {
+      max-width: 900px;
+      margin: 2em auto;
+      padding: 2em;
+      background: var(--card-bg);
+      border-radius: 18px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.07);
+      transition: background 0.3s;
     }
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5em;
-      justify-content: center;
-      align-items: center;
-      margin: 1em 0;
-    }
-    .model-select {
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-    }
-    #model-select {
-      padding: 0.5em 1em;
-      font-size: 1.1em;
-    }
-    .metadata-card {
-      max-width: 700px;
-      margin: 1em auto;
-      background: var(--card-bg-light);
-      border-radius: 10px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.06);
-      padding: 1em 2em;
-      transition: background .3s;
-    }
-    .dark-mode .metadata-card {
+    body.dark .container {
       background: var(--card-bg-dark);
     }
-    .metadata-row {
+    h1 {
+      margin-top: 0;
+      font-weight: 700;
+      font-size: 2em;
+    }
+    .selector-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 2em;
+      gap: 1em;
       align-items: center;
-      justify-content: space-between;
+      margin-bottom: 1.5em;
+      justify-content: center;
     }
-    .metadata-img {
-      width: 120px;
-      height: 90px;
+    .thumb-list {
+      display: flex;
+      gap: 1em;
+      flex-wrap: wrap;
+    }
+    .thumb, .thumb-fallback {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
       object-fit: cover;
-      border-radius: 7px;
-      box-shadow: 0 2px 7px rgba(0,0,0,.10);
-      background: #ddd;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border 0.2s;
+      background: #ccc;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+      font-weight: bold;
+      color: #222;
+      position: relative;
+      text-align: center;
+      user-select: none;
     }
-    .meta-details {
-      min-width: 200px;
-      flex: 1;
+    .thumb.selected, .thumb-fallback.selected {
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 0 2px var(--primary)33;
     }
-    .meta-details h2 {
-      margin: 0 0 .5em 0;
+    .thumb-fallback {
+      background: #bbb;
+      color: #fff;
+      font-size: 1.3em;
+      letter-spacing: 1px;
+    }
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .model-metadata {
+      margin: 1.5em 0 2em 0;
+      padding: 1em 1.5em;
+      border-radius: 12px;
+      background: #f0f5fb;
+      color: #333;
+      font-size: 1.05em;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2em;
+      max-width: 500px;
+    }
+    body.dark .model-metadata {
+      background: #181e23;
+      color: #e6eaf1;
     }
     model-viewer {
       width: 100%;
-      max-width: 800px;
+      max-width: 700px;
       height: 500px;
-      margin: 1.5em auto;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.10);
+      margin: 1.7em auto 1em auto;
       display: block;
-      transition: background .3s;
+      border-radius: 12px;
+      background: #eef1f5;
+      box-shadow: 0 0 12px rgba(0,0,0,0.08);
+      transition: background 0.3s;
     }
-    .dark-mode model-viewer {
-      background: #181818;
+    body.dark model-viewer {
+      background: #11161c;
     }
-    .hotspot-label {
-      background: #222;
-      color: #fff;
-      font-size: 0.95em;
-      padding: 0.3em 1em;
-      border-radius: 16px;
-      margin-top: 0.5em;
-      pointer-events: none;
-      display: none;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
+    .controls {
+      display: flex;
+      gap: 0.7em;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5em;
+      flex-wrap: wrap;
     }
-    .hotspot-btn:focus .hotspot-label,
-    .hotspot-btn:hover .hotspot-label {
-      display: block;
+    .controls label {
+      font-weight: 500;
+      margin-right: 0.2em;
     }
-    .ar-explainer {
-      font-size: 0.95em;
-      color: var(--accent);
-      margin-bottom: 0.5em;
-      text-align: center;
-    }
-    .toggle-btn, .ar-btn, .cam-btn {
-      background: var(--accent);
+    .toggle-btn, .ar-btn {
+      background: var(--primary);
       color: #fff;
       border: none;
-      border-radius: 5px;
-      padding: 0.6em 1.1em;
+      border-radius: 6px;
+      padding: 0.6em 1.2em;
       font-size: 1em;
       cursor: pointer;
-      margin-right: 0.5em;
-      transition: background .2s;
+      margin: 0 0.2em;
+      transition: background 0.2s;
+      outline: none;
     }
-    .toggle-btn[aria-pressed="true"] {
-      background: #444;
-      color: #fff;
+    .toggle-btn:active, .ar-btn:active {
+      background: #005fa4;
     }
-    @media (max-width: 900px) {
-      model-viewer { max-width: 100%; height: 400px; }
-      .metadata-card { padding: 1em; }
-      .metadata-row { flex-direction: column; gap: 1em; }
+    .theme-btn {
+      background: none;
+      border: none;
+      font-size: 1.2em;
+      color: var(--primary);
+      margin-left: auto;
+      cursor: pointer;
+      transition: color 0.2s;
     }
-    @media (max-width: 600px) {
-      model-viewer { height: 250px; }
-      .metadata-img { width: 80px; height: 60px; }
+    .ar-desc {
+      margin: 0.6em 0;
+      color: #555;
+      font-size: 0.99em;
+      text-align: center;
+    }
+    body.dark .ar-desc {
+      color: #b0bcc9;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 0.7em; }
+      model-viewer { height: 320px; }
+      .thumb-list { gap: 0.4em; }
+      .model-metadata { font-size: 0.99em; }
+    }
+    /* Hotspot labels */
+    .hotspot-label {
+      background: #fff;
+      color: #222;
+      padding: 0.3em 0.7em;
+      border-radius: 6px;
+      font-size: 0.93em;
+      margin-top: 8px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.13);
+      opacity: 0.97;
+      pointer-events: none;
+      white-space: nowrap;
+      display: none;
+      position: absolute;
+      left: 50%; top: 100%;
+      transform: translateX(-50%);
+    }
+    .hotspot:hover .hotspot-label, .hotspot:focus .hotspot-label {
+      display: block;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>3D Model Viewer with AR</h1>
-    <div class="controls">
-      <div class="model-select">
-        <label for="model-select">Choose a model:</label>
-        <select id="model-select"></select>
-      </div>
-      <button id="theme-toggle" class="toggle-btn" aria-pressed="false" title="Toggle dark/light mode">🌙</button>
-      <button id="autorotate-toggle" class="toggle-btn" aria-pressed="true" title="Toggle auto-rotate">⟳ Auto-rotate</button>
-      <button id="camera-toggle" class="cam-btn" aria-pressed="true" title="Toggle camera controls">🎥 Camera Controls</button>
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <h1>3D Model Viewer with AR</h1>
+      <button id="theme-btn" class="theme-btn" title="Toggle dark/light mode">🌙</button>
     </div>
-  </header>
-  <div class="metadata-card" id="metadata">
-    <!-- Populated by JS -->
+    <div class="selector-row" id="selector-row">
+      <!-- Thumbnails and dropdown inserted here -->
+    </div>
+    <div class="model-metadata" id="model-metadata"></div>
+    <div class="controls">
+      <button id="ar-btn" class="ar-btn">View in your space (AR)</button>
+      <span class="ar-desc">Use the AR button to place the model in your room. Works on Android & iOS!</span>
+      <label>
+        <input type="checkbox" id="auto-rotate-toggle" checked>
+        Auto-rotate
+      </label>
+      <label>
+        <input type="checkbox" id="camera-controls-toggle" checked>
+        Camera controls
+      </label>
+    </div>
+    <model-viewer
+      id="viewer"
+      src=""
+      alt="3D model"
+      ar
+      ar-modes="scene-viewer webxr quick-look"
+      camera-controls
+      auto-rotate
+      shadow-intensity="1"
+      poster=""
+      exposure="1.1"
+      environment-image="neutral"
+      interaction-prompt="when-focused"
+      style="width:100%;height:500px;">
+    </model-viewer>
+    <p style="text-align:center;margin:1em 0 0 0;font-size:1em;">
+      Share your 3D models with AR support using <a href="https://modelviewer.dev/" target="_blank" rel="noopener">model-viewer</a>!
+    </p>
   </div>
-  <div class="ar-explainer">
-    <b>🔎 AR Instructions:</b> Tap <span style="background:#0078D4;color:#fff;border-radius:4px;padding:0.25em 0.6em;">View in your space (AR)</span> to place this model in your environment.<br>
-    On iOS, use Safari; on Android, use Chrome.
-  </div>
-  <model-viewer
-    id="viewer"
-    src=""
-    alt="3D model"
-    ar
-    ar-modes="scene-viewer webxr quick-look"
-    camera-controls
-    auto-rotate
-    shadow-intensity="1"
-    interaction-prompt="when-focused"
-    style="width: 100%; height: 500px;">
-    <button slot="ar-button" class="ar-btn">
-      View in your space (AR)
-    </button>
-  </model-viewer>
   <script>
-    // Helper: Get DOM elements
-    const $ = sel => document.querySelector(sel);
-    const modelSelect = $('#model-select');
-    const viewer = $('#viewer');
-    const metaCard = $('#metadata');
-    const themeToggle = $('#theme-toggle');
-    const autorotateToggle = $('#autorotate-toggle');
-    const cameraToggle = $('#camera-toggle');
+    // Load and parse models.json, build UI
+    let modelData = {};
+    let currentCategory = "";
+    let currentModelIdx = 0;
 
-    // State
-    let modelsData = {};
-    let flatModelList = [];
-    let currentModel = null;
+    function setTheme(dark) {
+      document.body.classList.toggle('dark', dark);
+      document.getElementById('theme-btn').textContent = dark ? '☀️' : '🌙';
+      localStorage.setItem('ar_theme', dark ? 'dark' : 'light');
+    }
+    function loadTheme() {
+      setTheme(localStorage.getItem('ar_theme') === 'dark');
+    }
+    loadTheme();
+    document.getElementById('theme-btn').onclick = () => {
+      setTheme(!document.body.classList.contains('dark'));
+    };
 
-    // Load models.json
     fetch('models.json')
-      .then(resp => resp.json())
+      .then(r => r.json())
       .then(models => {
-        modelsData = models;
-        // Flatten and index for selection
-        flatModelList = [];
-        for (const group in models) {
-          models[group].forEach(m => {
-            flatModelList.push({ ...m, group });
+        modelData = models;
+        // Build thumbnail selectors
+        const selectorRow = document.getElementById('selector-row');
+        selectorRow.innerHTML = '';
+        let firstCategory = Object.keys(models)[0];
+        currentCategory = firstCategory;
+        let firstModel = models[firstCategory][0];
+        let thumbHTML = '';
+        for (const [cat, arr] of Object.entries(models)) {
+          thumbHTML += `<div style="display:flex;flex-direction:column;align-items:center;margin-right:2em;">
+            <div style="font-weight:500;font-size:1.1em;margin-bottom:0.3em;">${cat}</div>
+            <div class="thumb-list" id="thumbs-${cat}"></div>
+          </div>`;
+        }
+        selectorRow.innerHTML = thumbHTML;
+
+        // For each category, load thumbnails or fallback icons
+        for (const [cat, arr] of Object.entries(models)) {
+          const thumbList = document.getElementById(`thumbs-${cat}`);
+          arr.forEach((model, idx) => {
+            let thumbElem;
+            if (model.thumbnail) {
+              thumbElem = document.createElement('div');
+              thumbElem.className = 'thumb';
+              thumbElem.innerHTML = `<img src="${model.thumbnail}" alt="${model.name || ''}">`;
+            } else {
+              // No thumbnail: use fallback with first letter of model name
+              thumbElem = document.createElement('div');
+              thumbElem.className = 'thumb-fallback';
+              thumbElem.textContent = model.name ? model.name[0] : '?';
+              thumbElem.title = model.name || '';
+            }
+            if (cat === firstCategory && idx === 0) thumbElem.classList.add('selected');
+            thumbElem.onclick = () => selectModel(cat, idx);
+            thumbList.appendChild(thumbElem);
           });
         }
-        buildModelDropdown();
-        loadModel(flatModelList[0].file); // default
+        // Show first model
+        selectModel(firstCategory, 0);
       });
 
-    // Build model selector with thumbnails
-    function buildModelDropdown() {
-      modelSelect.innerHTML = "";
-      for (const group in modelsData) {
-        const optgroup = document.createElement('optgroup');
-        optgroup.label = group;
-        modelsData[group].forEach((model, idx) => {
-          const option = document.createElement('option');
-          option.value = model.file;
-          option.innerHTML = model.name;
-          // Custom data attributes for lookup
-          option.dataset.idx = flatModelList.findIndex(m => m.file === model.file);
-          optgroup.appendChild(option);
-        });
-        modelSelect.appendChild(optgroup);
+    function selectModel(category, idx) {
+      currentCategory = category;
+      currentModelIdx = idx;
+      const model = modelData[category][idx];
+      // Highlight thumb
+      for (const [cat, arr] of Object.entries(modelData)) {
+        const thumbs = document.getElementById(`thumbs-${cat}`).children;
+        for (let i = 0; i < thumbs.length; ++i) {
+          thumbs[i].classList.toggle('selected', cat === category && i === idx);
+        }
       }
-      modelSelect.addEventListener('change', (e) => {
-        loadModel(modelSelect.value);
-      });
-    }
-
-    // Load model, update viewer, metadata, poster, hotspots, etc.
-    function loadModel(modelPath) {
-      currentModel = flatModelList.find(m => m.file === modelPath);
-      if (!currentModel) return;
-
-      // Update viewer source and poster
-      viewer.src = currentModel.file;
-      viewer.poster = currentModel.poster || "";
-
-      // Remove existing hotspots
-      Array.from(viewer.querySelectorAll('[slot^="hotspot-"]')).forEach(el => el.remove());
-
-      // Add hotspots (annotations)
-      if (currentModel.hotspots && currentModel.hotspots.length) {
-        currentModel.hotspots.forEach((h, i) => {
-          const btn = document.createElement('button');
-          btn.setAttribute('slot', `hotspot-${i+1}`);
-          btn.setAttribute('data-position', h.position);
-          btn.setAttribute('data-normal', h.normal);
-          btn.className = 'hotspot-btn';
-          btn.innerText = h.name[0] || '?';
-          // Add label for hover/focus
-          const label = document.createElement('div');
-          label.className = 'hotspot-label';
-          label.innerText = h.label;
-          btn.appendChild(label);
-          viewer.appendChild(btn);
-        });
-      }
-
-      // Update metadata card
-      metaCard.innerHTML = `
-        <div class="metadata-row">
-          <img class="metadata-img" src="${currentModel.thumbnail || ''}" alt="${currentModel.name} thumbnail">
-          <div class="meta-details">
-            <h2>${currentModel.name}</h2>
-            <div><b>Description:</b> ${currentModel.description || ''}</div>
-            <div><b>Dimensions:</b> ${currentModel.dimensions || ''}</div>
-            <div><b>Creator:</b> ${currentModel.creator || ''}</div>
-          </div>
-        </div>
+      // Metadata
+      document.getElementById('model-metadata').innerHTML = `
+        <b>${model.name}</b>
+        <span><b>Description:</b> ${model.description}</span>
+        <span><b>Dimensions:</b> ${model.dimensions}</span>
+        <span><b>Creator:</b> ${model.creator}</span>
       `;
+      // Model viewer
+      const viewer = document.getElementById('viewer');
+      viewer.src = model.file;
+      viewer.alt = `${model.name} 3D model`;
+      viewer.poster = model.thumbnail || '';
+      // Remove old hotspots
+      Array.from(viewer.querySelectorAll('[slot^="hotspot"]')).forEach(e => e.remove());
+      // (Optional: Add hotspots here if you have any in your JSON)
     }
 
-    // Theme toggle
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      const pressed = document.body.classList.contains('dark-mode');
-      themeToggle.setAttribute('aria-pressed', pressed ? "true" : "false");
-      themeToggle.innerText = pressed ? "☀️" : "🌙";
-    });
+    // AR Button functionality
+    document.getElementById('ar-btn').onclick = () => {
+      document.getElementById('viewer').activateAR();
+    };
 
-    // Auto-rotate toggle
-    autorotateToggle.addEventListener('click', () => {
-      const enabled = viewer.hasAttribute('auto-rotate');
-      if (enabled) {
-        viewer.removeAttribute('auto-rotate');
-      } else {
-        viewer.setAttribute('auto-rotate', '');
-      }
-      autorotateToggle.setAttribute('aria-pressed', enabled ? "false" : "true");
-    });
-
-    // Camera controls toggle
-    cameraToggle.addEventListener('click', () => {
-      const enabled = viewer.hasAttribute('camera-controls');
-      if (enabled) {
-        viewer.removeAttribute('camera-controls');
-      } else {
-        viewer.setAttribute('camera-controls', '');
-      }
-      cameraToggle.setAttribute('aria-pressed', enabled ? "false" : "true");
-    });
-
-    // Set default camera angle (optional, e.g. on model load)
-    viewer.addEventListener('load', () => {
-      viewer.cameraOrbit = "0deg 75deg 2m";
-    });
+    // Auto-rotate/camera controls toggles
+    document.getElementById('auto-rotate-toggle').onchange = (e) => {
+      document.getElementById('viewer').autoRotate = e.target.checked;
+    };
+    document.getElementById('camera-controls-toggle').onchange = (e) => {
+      document.getElementById('viewer').cameraControls = e.target.checked;
+    };
   </script>
 </body>
 </html>
