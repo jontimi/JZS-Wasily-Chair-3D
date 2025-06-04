@@ -7,11 +7,42 @@
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:500,700&display=swap">
   <style>
+    :root {
+      --main-bg: #f8fafd;
+      --panel-bg: #f3f6fa;
+      --panel-border: #e3e8f0;
+      --text-main: #222;
+      --accent: #0078d7;
+      --btn-bg: #fff;
+      --btn-bg-selected: #e9f3fd;
+      --btn-border: #e0e6ef;
+      --btn-border-selected: #0078d7;
+      --summary-bg: #e9f3fd;
+      --ar-btn-bg: #0078d7;
+      --ar-btn-bg-hover: #005fa3;
+      --ar-btn-txt: #fff;
+    }
+    .night {
+      --main-bg: #181e28;
+      --panel-bg: #232b39;
+      --panel-border: #2b3242;
+      --text-main: #f3f6fa;
+      --accent: #5caaff;
+      --btn-bg: #232b39;
+      --btn-bg-selected: #244060;
+      --btn-border: #2e3b4e;
+      --btn-border-selected: #5caaff;
+      --summary-bg: #1d2533;
+      --ar-btn-bg: #5caaff;
+      --ar-btn-bg-hover: #2379be;
+      --ar-btn-txt: #232b39;
+    }
     body {
       font-family: 'Inter', Arial, sans-serif;
       margin: 0;
-      background: #f8fafd;
-      color: #222;
+      background: var(--main-bg);
+      color: var(--text-main);
+      transition: background 0.35s, color 0.35s;
     }
     .main-wrap {
       display: flex;
@@ -19,27 +50,52 @@
       max-width: 1200px;
       margin: 0 auto;
       background: #fff;
+      background: var(--main-bg);
       box-shadow: 0 2px 16px 0 #0001;
       border-radius: 20px;
       overflow: hidden;
       gap: 0;
+      transition: background 0.35s;
     }
     .side-panel {
-      width: 320px;
-      background: #f3f6fa;
+      width: 340px;
+      background: var(--panel-bg);
       padding: 2.2em 1.3em 1.3em 1.3em;
       display: flex;
       flex-direction: column;
       gap: 2em;
-      border-right: 1px solid #e3e8f0;
+      border-right: 1px solid var(--panel-border);
       min-width: 220px;
+      transition: background 0.35s, border-color 0.35s;
+      position: relative;
     }
     .side-panel h2 {
       font-size: 1.3em;
       font-weight: bold;
-      color: #0078d7;
+      color: var(--accent);
       margin-bottom: 1.1em;
       letter-spacing: 0.01em;
+    }
+    .night-toggle-btn {
+      position: absolute;
+      top: 1.2em;
+      right: 1.2em;
+      background: var(--btn-bg);
+      color: var(--accent);
+      border: 1.5px solid var(--btn-border);
+      border-radius: 100px;
+      padding: 0.4em 1em;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+      z-index: 5;
+      box-shadow: 0 2px 6px #0002;
+    }
+    .night .night-toggle-btn {
+      color: #f3f6fa;
+      background: #2a3546;
+      border: 1.5px solid #5caaff;
     }
     .config-group {
       margin-bottom: 1.9em;
@@ -48,40 +104,34 @@
       font-weight: 600;
       margin-bottom: 0.5em;
       display: block;
-      color: #222;
+      color: var(--text-main);
     }
-    .option-list {
-      display: flex;
-      gap: 0.7em;
-      flex-wrap: wrap;
-    }
-    .option-btn {
-      min-width: 48px;
-      min-height: 40px;
-      border: 2px solid #e0e6ef;
-      background: #fff;
+    select, .option-dropdown {
+      width: 100%;
+      padding: 0.67em 1em;
+      font-size: 1.07em;
       border-radius: 10px;
-      cursor: pointer;
-      padding: 0.5em 1em;
-      font-size: 1em;
-      font-weight: 500;
-      color: #222;
-      transition: border 0.18s, box-shadow 0.18s;
+      border: 2px solid var(--btn-border);
+      background: var(--btn-bg);
+      color: var(--text-main);
+      font-family: inherit;
+      margin-bottom: 0.4em;
+      margin-top: 0.1em;
+      appearance: none;
       outline: none;
+      transition: background 0.2s, border 0.2s, color 0.2s;
     }
-    .option-btn.selected, .option-btn:active {
-      border: 2px solid #0078d7;
-      color: #0078d7;
-      box-shadow: 0 0 0 1px #0078d766;
-      background: #e9f3fd;
+    select:focus {
+      border-color: var(--accent);
     }
     .summary-panel {
       margin-top: 2em;
-      background: #e9f3fd;
+      background: var(--summary-bg);
       border-radius: 10px;
       padding: 1em 1.2em;
-      color: #222;
-      font-size: 1.08em;
+      color: var(--text-main);
+      font-size: 1.12em;
+      transition: background 0.35s, color 0.35s;
     }
     .summary-row {
       display: flex;
@@ -89,12 +139,13 @@
       margin-bottom: 0.5em;
     }
     .summary-row strong {
-      color: #0078d7;
+      color: var(--accent);
+      font-weight: 600;
     }
     .ar-btn {
       margin-top: 2em;
-      background: #0078d7;
-      color: #fff;
+      background: var(--ar-btn-bg);
+      color: var(--ar-btn-txt);
       border: none;
       padding: 0.9em 2em;
       font-size: 1.1em;
@@ -103,10 +154,10 @@
       cursor: pointer;
       letter-spacing: 0.02em;
       box-shadow: 0 0.5px 3px #0078d71a;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
     }
     .ar-btn:hover {
-      background: #005fa3;
+      background: var(--ar-btn-bg-hover);
     }
     .viewer-panel {
       flex: 1 1 0;
@@ -116,12 +167,15 @@
       align-items: center;
       min-width: 0;
       padding: 2.5em 2em;
+      background: var(--main-bg);
+      transition: background 0.35s;
     }
     .viewer-title {
       font-size: 1.85em;
       font-weight: 700;
       margin-bottom: 1.2em;
-      color: #222;
+      color: var(--text-main);
+      transition: color 0.35s;
     }
     model-viewer {
       width: 100%;
@@ -132,35 +186,54 @@
       box-shadow: 0 2px 14px #0002;
       margin-bottom: 0.7em;
       min-width: 260px;
+      transition: background 0.35s;
     }
+    /* Responsive design */
     @media (max-width: 900px) {
       .main-wrap { flex-direction: column; border-radius: 0; }
-      .side-panel { width: 100%; min-width: 0; border-right: none; border-bottom: 1px solid #e3e8f0; flex-direction: row; flex-wrap: wrap; gap: 1.2em; }
+      .side-panel { width: 100%; min-width: 0; border-right: none; border-bottom: 1px solid var(--panel-border); flex-direction: row; flex-wrap: wrap; gap: 1.2em; }
       .viewer-panel { padding: 1em 0.3em; }
+      model-viewer { max-width: 100vw; }
+      .summary-panel { margin-top: 1em; }
     }
     @media (max-width: 700px) {
       .main-wrap { padding: 0; }
-      .side-panel { padding: 1em 0.3em; }
-      model-viewer { height: 320px; }
+      .side-panel {
+        padding: 1em 0.5em 1em 0.5em;
+        flex-direction: column;
+        gap: 1em;
+        border-bottom: none;
+      }
+      .viewer-panel { padding: 0.7em 0.1em; }
+      model-viewer { height: 230px; min-width: 0; }
+      .viewer-title { font-size: 1.25em; }
+      .summary-panel { font-size: 1em; }
+    }
+    @media (max-width: 430px) {
+      .side-panel { padding: 0.5em 0.1em 0.5em 0.1em; }
+      .viewer-panel { padding: 0.1em 0; }
+      model-viewer { height: 180px; }
+      .viewer-title { font-size: 1em; }
     }
   </style>
 </head>
 <body>
   <div class="main-wrap">
     <div class="side-panel">
+      <button class="night-toggle-btn" id="nightToggle" title="Toggle Night Mode">🌙 Night Mode</button>
       <h2>Select a 3D Model</h2>
       <div class="config-group">
         <span class="group-label">Category</span>
-        <div class="option-list" id="cat-list">
-          <button class="option-btn selected" data-cat="Furniture">Furniture</button>
-          <button class="option-btn" data-cat="Animals">Animals</button>
-        </div>
+        <select id="cat-dropdown" class="option-dropdown" aria-label="Category">
+          <option value="Furniture">Furniture</option>
+          <option value="Animals">Animals</option>
+        </select>
       </div>
       <div class="config-group">
         <span class="group-label">Model</span>
-        <div class="option-list" id="model-list">
-          <!-- Model buttons inserted by JS -->
-        </div>
+        <select id="model-dropdown" class="option-dropdown" aria-label="Model">
+          <!-- Model options inserted by JS -->
+        </select>
       </div>
       <div class="summary-panel" id="summary-panel">
         <div class="summary-row"><span>Category:</span> <strong id="sum-cat">Furniture</strong></div>
@@ -187,22 +260,16 @@
     let currentCat = "Furniture";
     let currentModelIdx = 0;
 
-    function renderModelList(category) {
-      const list = document.getElementById("model-list");
-      list.innerHTML = '';
+    function renderModelDropdown(category) {
+      const modelDropdown = document.getElementById("model-dropdown");
+      modelDropdown.innerHTML = '';
       CATEGORIES[category].forEach((model, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn' + (i === 0 ? ' selected' : '');
-        btn.textContent = model.name;
-        btn.onclick = function() {
-          // Deselect all
-          list.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          currentModelIdx = i;
-          setModel();
-        };
-        list.appendChild(btn);
+        const opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = model.name;
+        modelDropdown.appendChild(opt);
       });
+      modelDropdown.selectedIndex = 0;
     }
 
     function setModel() {
@@ -213,16 +280,18 @@
       document.getElementById('sum-model').textContent = model.name;
     }
 
-    // Category buttons
-    document.querySelectorAll("#cat-list .option-btn").forEach(btn => {
-      btn.onclick = function() {
-        document.querySelectorAll("#cat-list .option-btn").forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        currentCat = btn.dataset.cat;
-        currentModelIdx = 0;
-        renderModelList(currentCat);
-        setModel();
-      }
+    // Category dropdown
+    document.getElementById("cat-dropdown").addEventListener("change", function() {
+      currentCat = this.value;
+      currentModelIdx = 0;
+      renderModelDropdown(currentCat);
+      setModel();
+    });
+
+    // Model dropdown
+    document.getElementById("model-dropdown").addEventListener("change", function() {
+      currentModelIdx = parseInt(this.value, 10);
+      setModel();
     });
 
     // Load models.json and initialize
@@ -230,7 +299,7 @@
       .then(r => r.json())
       .then(data => {
         CATEGORIES = data;
-        renderModelList(currentCat);
+        renderModelDropdown(currentCat);
         setModel();
       });
 
@@ -238,6 +307,17 @@
     document.getElementById("ar-btn").onclick = () => {
       document.getElementById("viewer").activateAR();
     };
+
+    // Night Mode
+    const nightBtn = document.getElementById("nightToggle");
+    nightBtn.addEventListener("click", function() {
+      document.body.classList.toggle("night");
+      if(document.body.classList.contains("night")) {
+        nightBtn.innerHTML = "☀️ Light Mode";
+      } else {
+        nightBtn.innerHTML = "🌙 Night Mode";
+      }
+    });
   </script>
 </body>
 </html>
