@@ -2,284 +2,252 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Model Viewer | Demo</title>
+  <title>3D Configurator | Furniture & Animals</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:500,700&display=swap">
   <style>
     body {
-      font-family: 'Noto Sans', Arial, sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
       margin: 0;
-      background: #fff;
-      color: #111;
+      background: #f8fafd;
+      color: #222;
     }
-    .main-container {
+    .main-wrap {
+      display: flex;
+      min-height: 100vh;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 2em 1em;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 3em;
+      background: #fff;
+      box-shadow: 0 2px 16px 0 #0001;
+      border-radius: 20px;
+      overflow: hidden;
+      gap: 0;
     }
-    .viewer-section {
-      flex: 1 1 420px;
-      min-width: 320px;
-    }
-    .info-section {
-      flex: 1 1 320px;
-      min-width: 320px;
+    .side-panel {
+      width: 320px;
+      background: #f3f6fa;
+      padding: 2.2em 1.3em 1.3em 1.3em;
       display: flex;
       flex-direction: column;
-      gap: 1.5em;
+      gap: 2em;
+      border-right: 1px solid #e3e8f0;
+      min-width: 220px;
     }
-    .product-title {
-      font-size: 2.1em;
+    .side-panel h2 {
+      font-size: 1.3em;
       font-weight: bold;
-      margin-bottom: 0.2em;
+      color: #0078d7;
+      margin-bottom: 1.1em;
       letter-spacing: 0.01em;
     }
-    .product-category {
-      font-size: 1.1em;
-      font-weight: 500;
-      color: #555;
-      margin-bottom: 0.4em;
-      letter-spacing: 0.01em;
+    .config-group {
+      margin-bottom: 1.9em;
     }
-    .variant-row {
-      margin-bottom: 1em;
-    }
-    .variant-label {
-      font-weight: 500;
-      margin-bottom: 0.4em;
+    .group-label {
+      font-weight: 600;
+      margin-bottom: 0.5em;
       display: block;
+      color: #222;
     }
-    .variant-options {
+    .option-list {
       display: flex;
-      gap: 0.6em;
+      gap: 0.7em;
       flex-wrap: wrap;
     }
-    .variant-btn {
-      min-width: 38px;
-      min-height: 38px;
-      padding: 0 1.1em;
-      border-radius: 6px;
-      border: 2px solid #eee;
+    .option-btn {
+      min-width: 48px;
+      min-height: 40px;
+      border: 2px solid #e0e6ef;
+      background: #fff;
+      border-radius: 10px;
       cursor: pointer;
-      background: #f4f4f4;
+      padding: 0.5em 1em;
       font-size: 1em;
-      font-family: inherit;
-      color: #111;
       font-weight: 500;
-      transition: border 0.18s, background 0.18s;
-      margin-bottom: 0.3em;
+      color: #222;
+      transition: border 0.18s, box-shadow 0.18s;
+      outline: none;
     }
-    .variant-btn.selected {
-      border: 2px solid #0058a3;
-      background: #e5f0fc;
-      color: #0058a3;
-      font-weight: bold;
+    .option-btn.selected, .option-btn:active {
+      border: 2px solid #0078d7;
+      color: #0078d7;
+      box-shadow: 0 0 0 1px #0078d766;
+      background: #e9f3fd;
     }
-    .purchase-row {
+    .summary-panel {
+      margin-top: 2em;
+      background: #e9f3fd;
+      border-radius: 10px;
+      padding: 1em 1.2em;
+      color: #222;
+      font-size: 1.08em;
+    }
+    .summary-row {
       display: flex;
-      align-items: center;
-      gap: 1em;
-      margin: 1.5em 0 1em 0;
+      justify-content: space-between;
+      margin-bottom: 0.5em;
+    }
+    .summary-row strong {
+      color: #0078d7;
     }
     .ar-btn {
-      background: #0058a3;
+      margin-top: 2em;
+      background: #0078d7;
       color: #fff;
       border: none;
-      font-size: 1.08em;
+      padding: 0.9em 2em;
+      font-size: 1.1em;
       font-weight: 700;
-      padding: 0.8em 2.2em;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.2s;
       letter-spacing: 0.02em;
+      box-shadow: 0 0.5px 3px #0078d71a;
+      transition: background 0.2s;
     }
     .ar-btn:hover {
-      background: #004176;
+      background: #005fa3;
     }
-    .desc-short {
-      color: #333;
-      font-size: 1.12em;
+    .viewer-panel {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-width: 0;
+      padding: 2.5em 2em;
     }
-    .model-viewer-wrapper {
-      background: #f4f4f4;
-      border-radius: 14px;
-      padding: 1.3em;
-      box-shadow: 0 1px 24px rgba(0,0,0,0.06);
-      text-align: center;
+    .viewer-title {
+      font-size: 1.85em;
+      font-weight: 700;
+      margin-bottom: 1.2em;
+      color: #222;
     }
     model-viewer {
       width: 100%;
-      height: 400px;
-      background: #fff;
-      border-radius: 10px;
-    }
-    .option-row {
-      font-size: 1em;
-      color: #444;
-      margin: 0.5em 0 0.5em 0;
+      max-width: 600px;
+      height: 440px;
+      border-radius: 14px;
+      background: #f5f7fa;
+      box-shadow: 0 2px 14px #0002;
+      margin-bottom: 0.7em;
+      min-width: 260px;
     }
     @media (max-width: 900px) {
-      .main-container {
-        flex-direction: column;
-        gap: 2.5em;
-      }
-      .info-section, .viewer-section {
-        min-width: 0;
-      }
-      model-viewer { height: 340px; }
+      .main-wrap { flex-direction: column; border-radius: 0; }
+      .side-panel { width: 100%; min-width: 0; border-right: none; border-bottom: 1px solid #e3e8f0; flex-direction: row; flex-wrap: wrap; gap: 1.2em; }
+      .viewer-panel { padding: 1em 0.3em; }
+    }
+    @media (max-width: 700px) {
+      .main-wrap { padding: 0; }
+      .side-panel { padding: 1em 0.3em; }
+      model-viewer { height: 320px; }
     }
   </style>
 </head>
 <body>
-  <div class="main-container">
-    <div class="viewer-section">
-      <div class="model-viewer-wrapper">
-        <model-viewer id="viewer"
-          src="Furniture/HiveShelf90cm.glb"
-          alt="3D Model"
-          ar ar-modes="scene-viewer webxr quick-look"
-          camera-controls auto-rotate shadow-intensity="1"
-          environment-image="neutral"
-          exposure="1.13"
-          style="width:100%;height:400px;">
-        </model-viewer>
-      </div>
-      <div class="variant-row">
-        <span class="variant-label">Furniture models:</span>
-        <div class="variant-options" id="furniture-options">
-          <!-- Buttons inserted by JS -->
+  <div class="main-wrap">
+    <div class="side-panel">
+      <h2>Select a 3D Model</h2>
+      <div class="config-group">
+        <span class="group-label">Category</span>
+        <div class="option-list" id="cat-list">
+          <button class="option-btn selected" data-cat="Furniture">Furniture</button>
+          <button class="option-btn" data-cat="Animals">Animals</button>
         </div>
       </div>
-      <div class="variant-row">
-        <span class="variant-label">Animal models:</span>
-        <div class="variant-options" id="animal-options">
-          <!-- Buttons inserted by JS -->
+      <div class="config-group">
+        <span class="group-label">Model</span>
+        <div class="option-list" id="model-list">
+          <!-- Model buttons inserted by JS -->
         </div>
       </div>
+      <div class="summary-panel" id="summary-panel">
+        <div class="summary-row"><span>Category:</span> <strong id="sum-cat">Furniture</strong></div>
+        <div class="summary-row"><span>Model:</span> <strong id="sum-model">HiveShelf90cm</strong></div>
+      </div>
+      <button class="ar-btn" id="ar-btn">View in AR</button>
     </div>
-    <div class="info-section">
-      <div>
-        <div class="product-title" id="model-title">HiveShelf90cm</div>
-        <div class="product-category" id="model-category">Furniture</div>
-        <div class="desc-short" id="model-desc">
-          3D model viewer demo. Select a model above to view it in 3D and AR.
-        </div>
-      </div>
-      <div class="option-row" id="model-dims">
-        <!-- Dimensions shown here -->
-      </div>
-      <div class="option-row" id="model-creator">
-        <!-- Creator shown here -->
-      </div>
-      <div class="purchase-row">
-        <button class="ar-btn" id="ar-btn">View in your home (AR)</button>
-      </div>
+    <div class="viewer-panel">
+      <div class="viewer-title" id="viewer-title">HiveShelf90cm</div>
+      <model-viewer id="viewer"
+        src="Furniture/HiveShelf90cm.glb"
+        alt="3D preview"
+        ar ar-modes="scene-viewer webxr quick-look"
+        camera-controls auto-rotate shadow-intensity="1"
+        environment-image="neutral"
+        exposure="1.13"
+        style="width:100%;height:440px;">
+      </model-viewer>
     </div>
   </div>
   <script>
-    // Model data (update as needed; can be loaded from JSON)
-    const FURNITURE = [
-      {
-        file: "Furniture/HiveShelf90cm.glb",
-        name: "HiveShelf90cm",
-        dimensions: "900mm × 400mm × 1800mm",
-        description: "A modern storage shelf, ideal for living rooms.",
-        creator: "Jane Doe"
-      },
-      {
-        file: "Furniture/ROMACouchTripoAcompressed.glb",
-        name: "ROMACouchTripoAcompressed",
-        dimensions: "2000mm × 900mm × 800mm",
-        description: "Classic Roma couch for modern interiors.",
-        creator: "Jane Doe"
-      },
-      {
-        file: "Furniture/ShiraTableAI.glb",
-        name: "ShiraTableAI",
-        dimensions: "1400mm × 800mm × 750mm",
-        description: "AI-designed Shira table.",
-        creator: "Jane Doe"
-      },
-      {
-        file: "Furniture/Sittingtable.glb",
-        name: "Sittingtable",
-        dimensions: "1200mm × 700mm × 400mm",
-        description: "Elegant sitting table for multipurpose use.",
-        creator: "John Smith"
-      },
-      {
-        file: "Furniture/SlimClosetAce.glb",
-        name: "SlimClosetAce",
-        dimensions: "500mm × 600mm × 1800mm",
-        description: "Slim closet for compact rooms.",
-        creator: "Jane Doe"
-      }
-    ];
-    const ANIMALS = [
-      {
-        file: "animals/Armadillo.glb",
-        name: "Armadillo",
-        dimensions: "450mm × 200mm × 150mm",
-        description: "A detailed 3D armadillo model.",
-        creator: "Wildlife Studio"
-      },
-      {
-        file: "animals/ArmadilloV2.glb",
-        name: "ArmadilloV2",
-        dimensions: "470mm × 210mm × 160mm",
-        description: "Updated armadillo model with extra detail.",
-        creator: "Wildlife Studio"
-      }
-    ];
+    // Your models
+    const CATEGORIES = {
+      "Furniture": [
+        {file: "Furniture/HiveShelf90cm.glb", name: "HiveShelf90cm"},
+        {file: "Furniture/ROMACouchTripoAcompressed.glb", name: "ROMACouchTripoAcompressed"},
+        {file: "Furniture/ShiraTableAI.glb", name: "ShiraTableAI"},
+        {file: "Furniture/Sittingtable.glb", name: "Sittingtable"},
+        {file: "Furniture/SlimClosetAce.glb", name: "SlimClosetAce"}
+      ],
+      "Animals": [
+        {file: "animals/Armadillo.glb", name: "Armadillo"},
+        {file: "animals/ArmadilloV2.glb", name: "ArmadilloV2"}
+      ]
+    };
 
-    // Utility to set the model
-    function setModel(model, category) {
-      const viewer = document.getElementById('viewer');
-      viewer.src = model.file;
-      viewer.alt = model.name + " 3D model";
-      document.getElementById('model-title').textContent = model.name;
-      document.getElementById('model-category').textContent = category;
-      document.getElementById('model-desc').textContent = model.description || '';
-      document.getElementById('model-dims').textContent = "Dimensions: " + (model.dimensions || '');
-      document.getElementById('model-creator').textContent = "Creator: " + (model.creator || '');
-    }
+    let currentCat = "Furniture";
+    let currentModelIdx = 0;
 
-    // Insert buttons for each category
-    function makeButtons(models, containerId, category) {
-      const wrap = document.getElementById(containerId);
-      wrap.innerHTML = '';
-      models.forEach((model, idx) => {
+    // Render model buttons for a category
+    function renderModelList(category) {
+      const list = document.getElementById("model-list");
+      list.innerHTML = '';
+      CATEGORIES[category].forEach((model, i) => {
         const btn = document.createElement('button');
-        btn.className = 'variant-btn' + (idx === 0 ? ' selected' : '');
+        btn.className = 'option-btn' + (i === 0 ? ' selected' : '');
         btn.textContent = model.name;
-        btn.onclick = () => {
+        btn.onclick = function() {
           // Deselect all
-          wrap.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+          list.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
-          // Also deselect in the other category
-          if (category === "Furniture") {
-            document.getElementById('animal-options').querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
-          } else {
-            document.getElementById('furniture-options').querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
-          }
-          setModel(model, category);
+          currentModelIdx = i;
+          setModel();
         };
-        wrap.appendChild(btn);
+        list.appendChild(btn);
       });
     }
 
-    // Initial UI setup
-    makeButtons(FURNITURE, "furniture-options", "Furniture");
-    makeButtons(ANIMALS, "animal-options", "Animals");
-    setModel(FURNITURE[0], "Furniture");
+    // Set current model in viewer and summary
+    function setModel() {
+      const model = CATEGORIES[currentCat][currentModelIdx];
+      document.getElementById('viewer').src = model.file;
+      document.getElementById('viewer-title').textContent = model.name;
+      document.getElementById('sum-cat').textContent = currentCat;
+      document.getElementById('sum-model').textContent = model.name;
+    }
 
-    // AR button
-    document.getElementById('ar-btn').onclick = () => {
-      document.getElementById('viewer').activateAR();
+    // Category buttons
+    document.querySelectorAll("#cat-list .option-btn").forEach(btn => {
+      btn.onclick = function() {
+        // Deselect all
+        document.querySelectorAll("#cat-list .option-btn").forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        currentCat = btn.dataset.cat;
+        currentModelIdx = 0;
+        renderModelList(currentCat);
+        setModel();
+      }
+    });
+
+    // Initial render
+    renderModelList(currentCat);
+    setModel();
+
+    // AR Button
+    document.getElementById("ar-btn").onclick = () => {
+      document.getElementById("viewer").activateAR();
     };
   </script>
 </body>
