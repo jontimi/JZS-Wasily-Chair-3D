@@ -2,345 +2,205 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Model Viewer with AR</title>
+  <title>EKTORP 3-seat sofa - AR Viewer | Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap">
   <style>
-    :root {
-      --primary: #0078D4;
-      --bg: #f7f7f7;
-      --bg-dark: #1a1a1a;
-      --text: #222;
-      --text-dark: #eee;
-      --card-bg: #fff;
-      --card-bg-dark: #232323;
-    }
     body {
-      font-family: 'Inter', Arial, sans-serif;
-      margin: 0; padding: 0;
-      background: var(--bg);
-      color: var(--text);
-      transition: background 0.3s, color 0.3s;
+      font-family: 'Noto Sans', Arial, sans-serif;
+      margin: 0;
+      background: #fff;
+      color: #111;
     }
-    body.dark {
-      background: var(--bg-dark);
-      color: var(--text-dark);
-    }
-    .container {
-      max-width: 900px;
-      margin: 2em auto;
-      padding: 2em;
-      background: var(--card-bg);
-      border-radius: 18px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.07);
-      transition: background 0.3s;
-    }
-    body.dark .container {
-      background: var(--card-bg-dark);
-    }
-    h1 {
-      margin-top: 0;
-      font-weight: 700;
-      font-size: 2em;
-    }
-    .selector-row {
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2em 1em;
       display: flex;
       flex-wrap: wrap;
-      gap: 1em;
-      align-items: center;
-      margin-bottom: 1.5em;
-      justify-content: center;
+      gap: 3em;
     }
-    .thumb-list {
-      display: flex;
-      gap: 1em;
-      flex-wrap: wrap;
+    .viewer-section {
+      flex: 1 1 420px;
+      min-width: 320px;
     }
-    .thumb, .thumb-fallback {
-      width: 80px;
-      height: 80px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: border 0.2s;
-      background: #ccc;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2em;
-      font-weight: bold;
-      color: #222;
-      position: relative;
-      text-align: center;
-      user-select: none;
-    }
-    .thumb.selected, .thumb-fallback.selected {
-      border: 2px solid var(--primary);
-      box-shadow: 0 0 0 2px var(--primary)33;
-    }
-    .thumb-fallback {
-      background: #bbb;
-      color: #fff;
-      font-size: 1.3em;
-      letter-spacing: 1px;
-    }
-    .thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 12px;
-    }
-    .model-metadata {
-      margin: 1.5em 0 2em 0;
-      padding: 1em 1.5em;
-      border-radius: 12px;
-      background: #f0f5fb;
-      color: #333;
-      font-size: 1.05em;
-      line-height: 1.5;
+    .info-section {
+      flex: 1 1 320px;
+      min-width: 320px;
       display: flex;
       flex-direction: column;
-      gap: 0.2em;
-      max-width: 500px;
+      gap: 1.5em;
     }
-    body.dark .model-metadata {
-      background: #181e23;
-      color: #e6eaf1;
+    .product-title {
+      font-size: 2.1em;
+      font-weight: bold;
+      margin-bottom: 0.2em;
+      letter-spacing: 0.01em;
+    }
+    .product-price {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #0058a3;
+      margin-bottom: 0.7em;
+      letter-spacing: 0.01em;
+    }
+    .variant-row {
+      margin-bottom: 1em;
+    }
+    .variant-label {
+      font-weight: 500;
+      margin-bottom: 0.4em;
+      display: block;
+    }
+    .variant-options {
+      display: flex;
+      gap: 0.6em;
+    }
+    .variant-thumb {
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      border: 2px solid #eee;
+      cursor: pointer;
+      object-fit: cover;
+      transition: border 0.18s;
+    }
+    .variant-thumb.selected {
+      border: 2px solid #0058a3;
+      box-shadow: 0 0 0 2px #0058a333;
+    }
+    .purchase-row {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+      margin: 1.5em 0 1em 0;
+    }
+    .cta-btn {
+      background: #0058a3;
+      color: #fff;
+      border: none;
+      font-size: 1.08em;
+      font-weight: 700;
+      padding: 0.8em 2.2em;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .cta-btn:hover {
+      background: #004176;
+    }
+    .ar-btn {
+      background: #f5f5f5;
+      color: #0058a3;
+      border: 1.5px solid #0058a3;
+      font-size: 1em;
+      font-weight: 500;
+      border-radius: 6px;
+      padding: 0.8em 1.3em;
+      cursor: pointer;
+      margin-left: 1em;
+      transition: background 0.2s, color 0.2s;
+    }
+    .ar-btn:hover {
+      background: #e5f0fc;
+    }
+    .desc-short {
+      color: #333;
+      font-size: 1.12em;
+    }
+    .model-viewer-wrapper {
+      background: #f4f4f4;
+      border-radius: 14px;
+      padding: 1.3em;
+      box-shadow: 0 1px 24px rgba(0,0,0,0.06);
+      text-align: center;
     }
     model-viewer {
       width: 100%;
-      max-width: 700px;
-      height: 500px;
-      margin: 1.7em auto 1em auto;
-      display: block;
-      border-radius: 12px;
-      background: #eef1f5;
-      box-shadow: 0 0 12px rgba(0,0,0,0.08);
-      transition: background 0.3s;
-    }
-    body.dark model-viewer {
-      background: #11161c;
-    }
-    .controls {
-      display: flex;
-      gap: 0.7em;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1.5em;
-      flex-wrap: wrap;
-    }
-    .controls label {
-      font-weight: 500;
-      margin-right: 0.2em;
-    }
-    .toggle-btn, .ar-btn {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 0.6em 1.2em;
-      font-size: 1em;
-      cursor: pointer;
-      margin: 0 0.2em;
-      transition: background 0.2s;
-      outline: none;
-    }
-    .toggle-btn:active, .ar-btn:active {
-      background: #005fa4;
-    }
-    .theme-btn {
-      background: none;
-      border: none;
-      font-size: 1.2em;
-      color: var(--primary);
-      margin-left: auto;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-    .ar-desc {
-      margin: 0.6em 0;
-      color: #555;
-      font-size: 0.99em;
-      text-align: center;
-    }
-    body.dark .ar-desc {
-      color: #b0bcc9;
-    }
-    @media (max-width: 700px) {
-      .container { padding: 0.7em; }
-      model-viewer { height: 320px; }
-      .thumb-list { gap: 0.4em; }
-      .model-metadata { font-size: 0.99em; }
-    }
-    /* Hotspot labels */
-    .hotspot-label {
+      height: 400px;
       background: #fff;
-      color: #222;
-      padding: 0.3em 0.7em;
-      border-radius: 6px;
-      font-size: 0.93em;
-      margin-top: 8px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.13);
-      opacity: 0.97;
-      pointer-events: none;
-      white-space: nowrap;
-      display: none;
-      position: absolute;
-      left: 50%; top: 100%;
-      transform: translateX(-50%);
+      border-radius: 10px;
     }
-    .hotspot:hover .hotspot-label, .hotspot:focus .hotspot-label {
-      display: block;
+    .option-row {
+      font-size: 1em;
+      color: #444;
+      margin: 0.5em 0 0.5em 0;
+    }
+    @media (max-width: 900px) {
+      .main-container {
+        flex-direction: column;
+        gap: 2.5em;
+      }
+      .info-section, .viewer-section {
+        min-width: 0;
+      }
+      model-viewer { height: 340px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div style="display:flex;align-items:center;justify-content:space-between;">
-      <h1>3D Model Viewer with AR</h1>
-      <button id="theme-btn" class="theme-btn" title="Toggle dark/light mode">🌙</button>
+  <div class="main-container">
+    <div class="viewer-section">
+      <div class="model-viewer-wrapper">
+        <model-viewer id="viewer"
+          src="Furniture/EKTORP_KilandaBeige.glb"
+          alt="EKTORP 3-seat sofa, Kilanda light beige"
+          ar ar-modes="scene-viewer webxr quick-look"
+          camera-controls auto-rotate shadow-intensity="1"
+          poster="Furniture/EKTORP_KilandaBeige-poster.jpg"
+          environment-image="neutral"
+          exposure="1.13"
+          style="width:100%;height:400px;">
+        </model-viewer>
+      </div>
+      <div class="variant-row">
+        <span class="variant-label">Color/fabric options:</span>
+        <div class="variant-options" id="variant-options">
+          <img src="Furniture/EKTORP_KilandaBeige-thumb.jpg" class="variant-thumb selected" alt="Kilanda light beige" data-src="Furniture/EKTORP_KilandaBeige.glb" data-poster="Furniture/EKTORP_KilandaBeige-poster.jpg">
+          <img src="Furniture/EKTORP_HallarpGrey-thumb.jpg" class="variant-thumb" alt="Hallarp grey" data-src="Furniture/EKTORP_HallarpGrey.glb" data-poster="Furniture/EKTORP_HallarpGrey-poster.jpg">
+          <!-- Add more variants as needed -->
+        </div>
+      </div>
     </div>
-    <div class="selector-row" id="selector-row">
-      <!-- Thumbnails and dropdown inserted here -->
+    <div class="info-section">
+      <div>
+        <div class="product-title">EKTORP</div>
+        <div class="product-price">₪1,495</div>
+        <div class="desc-short">
+          3-seat sofa, Kilanda light beige<br>
+          Plush comfort, classic style, removable washable cover.
+        </div>
+      </div>
+      <div class="option-row">
+        Size: 218x88x88 cm
+      </div>
+      <div class="option-row">
+        Cover: Kilanda light beige (100% polyester)
+      </div>
+      <div class="purchase-row">
+        <button class="cta-btn">Add to cart</button>
+        <button class="ar-btn" id="ar-btn">View in your home (AR)</button>
+      </div>
+      <!-- You can add more info tabs or expandable areas here, for details, care, assembly etc. -->
     </div>
-    <div class="model-metadata" id="model-metadata"></div>
-    <div class="controls">
-      <button id="ar-btn" class="ar-btn">View in your space (AR)</button>
-      <span class="ar-desc">Use the AR button to place the model in your room. Works on Android & iOS!</span>
-      <label>
-        <input type="checkbox" id="auto-rotate-toggle" checked>
-        Auto-rotate
-      </label>
-      <label>
-        <input type="checkbox" id="camera-controls-toggle" checked>
-        Camera controls
-      </label>
-    </div>
-    <model-viewer
-      id="viewer"
-      src=""
-      alt="3D model"
-      ar
-      ar-modes="scene-viewer webxr quick-look"
-      camera-controls
-      auto-rotate
-      shadow-intensity="1"
-      poster=""
-      exposure="1.1"
-      environment-image="neutral"
-      interaction-prompt="when-focused"
-      style="width:100%;height:500px;">
-    </model-viewer>
-    <p style="text-align:center;margin:1em 0 0 0;font-size:1em;">
-      Share your 3D models with AR support using <a href="https://modelviewer.dev/" target="_blank" rel="noopener">model-viewer</a>!
-    </p>
   </div>
   <script>
-    // Load and parse models.json, build UI
-    let modelData = {};
-    let currentCategory = "";
-    let currentModelIdx = 0;
-
-    function setTheme(dark) {
-      document.body.classList.toggle('dark', dark);
-      document.getElementById('theme-btn').textContent = dark ? '☀️' : '🌙';
-      localStorage.setItem('ar_theme', dark ? 'dark' : 'light');
-    }
-    function loadTheme() {
-      setTheme(localStorage.getItem('ar_theme') === 'dark');
-    }
-    loadTheme();
-    document.getElementById('theme-btn').onclick = () => {
-      setTheme(!document.body.classList.contains('dark'));
-    };
-
-    fetch('models.json')
-      .then(r => r.json())
-      .then(models => {
-        modelData = models;
-        // Build thumbnail selectors
-        const selectorRow = document.getElementById('selector-row');
-        selectorRow.innerHTML = '';
-        let firstCategory = Object.keys(models)[0];
-        currentCategory = firstCategory;
-        let firstModel = models[firstCategory][0];
-        let thumbHTML = '';
-        for (const [cat, arr] of Object.entries(models)) {
-          thumbHTML += `<div style="display:flex;flex-direction:column;align-items:center;margin-right:2em;">
-            <div style="font-weight:500;font-size:1.1em;margin-bottom:0.3em;">${cat}</div>
-            <div class="thumb-list" id="thumbs-${cat}"></div>
-          </div>`;
-        }
-        selectorRow.innerHTML = thumbHTML;
-
-        // For each category, load thumbnails or fallback icons
-        for (const [cat, arr] of Object.entries(models)) {
-          const thumbList = document.getElementById(`thumbs-${cat}`);
-          arr.forEach((model, idx) => {
-            let thumbElem;
-            if (model.thumbnail) {
-              thumbElem = document.createElement('div');
-              thumbElem.className = 'thumb';
-              thumbElem.innerHTML = `<img src="${model.thumbnail}" alt="${model.name || ''}">`;
-            } else {
-              // No thumbnail: use fallback with first letter of model name
-              thumbElem = document.createElement('div');
-              thumbElem.className = 'thumb-fallback';
-              thumbElem.textContent = model.name ? model.name[0] : '?';
-              thumbElem.title = model.name || '';
-            }
-            if (cat === firstCategory && idx === 0) thumbElem.classList.add('selected');
-            thumbElem.onclick = () => selectModel(cat, idx);
-            thumbList.appendChild(thumbElem);
-          });
-        }
-        // Show first model
-        selectModel(firstCategory, 0);
+    // Variant switch
+    document.querySelectorAll('.variant-thumb').forEach(thumb => {
+      thumb.addEventListener('click', function() {
+        document.querySelectorAll('.variant-thumb').forEach(t => t.classList.remove('selected'));
+        thumb.classList.add('selected');
+        let viewer = document.getElementById('viewer');
+        viewer.src = thumb.getAttribute('data-src');
+        viewer.poster = thumb.getAttribute('data-poster') || '';
       });
-
-    function selectModel(category, idx) {
-      currentCategory = category;
-      currentModelIdx = idx;
-      const model = modelData[category][idx];
-      // Highlight thumb
-      for (const [cat, arr] of Object.entries(modelData)) {
-        const thumbs = document.getElementById(`thumbs-${cat}`).children;
-        for (let i = 0; i < thumbs.length; ++i) {
-          thumbs[i].classList.toggle('selected', cat === category && i === idx);
-        }
-      }
-      // Metadata
-      document.getElementById('model-metadata').innerHTML = `
-        <b>${model.name}</b>
-        <span><b>Description:</b> ${model.description}</span>
-        <span><b>Dimensions:</b> ${model.dimensions}</span>
-        <span><b>Creator:</b> ${model.creator}</span>
-      `;
-      // Model viewer
-      const viewer = document.getElementById('viewer');
-      viewer.src = model.file;
-      viewer.alt = `${model.name} 3D model`;
-      viewer.poster = model.thumbnail || '';
-      // Remove old hotspots
-      Array.from(viewer.querySelectorAll('[slot^="hotspot"]')).forEach(e => e.remove());
-      // (Optional: Add hotspots here if you have any in your JSON)
-    }
-
-    // AR Button functionality
+    });
+    // AR button
     document.getElementById('ar-btn').onclick = () => {
       document.getElementById('viewer').activateAR();
-    };
-
-    // Auto-rotate/camera controls toggles
-    document.getElementById('auto-rotate-toggle').onchange = (e) => {
-      document.getElementById('viewer').autoRotate = e.target.checked;
-    };
-    document.getElementById('camera-controls-toggle').onchange = (e) => {
-      document.getElementById('viewer').cameraControls = e.target.checked;
-    };
+    }
   </script>
 </body>
 </html>
