@@ -182,25 +182,11 @@
     </div>
   </div>
   <script>
-    // Your models
-    const CATEGORIES = {
-      "Furniture": [
-        {file: "Furniture/HiveShelf90cm.glb", name: "HiveShelf90cm"},
-        {file: "Furniture/ROMACouchTripoAcompressed.glb", name: "ROMACouchTripoAcompressed"},
-        {file: "Furniture/ShiraTableAI.glb", name: "ShiraTableAI"},
-        {file: "Furniture/Sittingtable.glb", name: "Sittingtable"},
-        {file: "Furniture/SlimClosetAce.glb", name: "SlimClosetAce"}
-      ],
-      "Animals": [
-        {file: "animals/Armadillo.glb", name: "Armadillo"},
-        {file: "animals/ArmadilloV2.glb", name: "ArmadilloV2"}
-      ]
-    };
-
+    // Fetch data from models.json
+    let CATEGORIES = {};
     let currentCat = "Furniture";
     let currentModelIdx = 0;
 
-    // Render model buttons for a category
     function renderModelList(category) {
       const list = document.getElementById("model-list");
       list.innerHTML = '';
@@ -219,7 +205,6 @@
       });
     }
 
-    // Set current model in viewer and summary
     function setModel() {
       const model = CATEGORIES[currentCat][currentModelIdx];
       document.getElementById('viewer').src = model.file;
@@ -231,7 +216,6 @@
     // Category buttons
     document.querySelectorAll("#cat-list .option-btn").forEach(btn => {
       btn.onclick = function() {
-        // Deselect all
         document.querySelectorAll("#cat-list .option-btn").forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         currentCat = btn.dataset.cat;
@@ -241,9 +225,14 @@
       }
     });
 
-    // Initial render
-    renderModelList(currentCat);
-    setModel();
+    // Load models.json and initialize
+    fetch('models.json')
+      .then(r => r.json())
+      .then(data => {
+        CATEGORIES = data;
+        renderModelList(currentCat);
+        setModel();
+      });
 
     // AR Button
     document.getElementById("ar-btn").onclick = () => {
