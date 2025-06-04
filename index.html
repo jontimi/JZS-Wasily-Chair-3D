@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>EKTORP 3-seat sofa - AR Viewer | Demo</title>
+  <title>3D Model Viewer | Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap">
@@ -38,11 +38,11 @@
       margin-bottom: 0.2em;
       letter-spacing: 0.01em;
     }
-    .product-price {
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #0058a3;
-      margin-bottom: 0.7em;
+    .product-category {
+      font-size: 1.1em;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 0.4em;
       letter-spacing: 0.01em;
     }
     .variant-row {
@@ -56,19 +56,28 @@
     .variant-options {
       display: flex;
       gap: 0.6em;
+      flex-wrap: wrap;
     }
-    .variant-thumb {
-      width: 38px;
-      height: 38px;
+    .variant-btn {
+      min-width: 38px;
+      min-height: 38px;
+      padding: 0 1.1em;
       border-radius: 6px;
       border: 2px solid #eee;
       cursor: pointer;
-      object-fit: cover;
-      transition: border 0.18s;
+      background: #f4f4f4;
+      font-size: 1em;
+      font-family: inherit;
+      color: #111;
+      font-weight: 500;
+      transition: border 0.18s, background 0.18s;
+      margin-bottom: 0.3em;
     }
-    .variant-thumb.selected {
+    .variant-btn.selected {
       border: 2px solid #0058a3;
-      box-shadow: 0 0 0 2px #0058a333;
+      background: #e5f0fc;
+      color: #0058a3;
+      font-weight: bold;
     }
     .purchase-row {
       display: flex;
@@ -76,7 +85,7 @@
       gap: 1em;
       margin: 1.5em 0 1em 0;
     }
-    .cta-btn {
+    .ar-btn {
       background: #0058a3;
       color: #fff;
       border: none;
@@ -88,23 +97,8 @@
       transition: background 0.2s;
       letter-spacing: 0.02em;
     }
-    .cta-btn:hover {
-      background: #004176;
-    }
-    .ar-btn {
-      background: #f5f5f5;
-      color: #0058a3;
-      border: 1.5px solid #0058a3;
-      font-size: 1em;
-      font-weight: 500;
-      border-radius: 6px;
-      padding: 0.8em 1.3em;
-      cursor: pointer;
-      margin-left: 1em;
-      transition: background 0.2s, color 0.2s;
-    }
     .ar-btn:hover {
-      background: #e5f0fc;
+      background: #004176;
     }
     .desc-short {
       color: #333;
@@ -145,62 +139,148 @@
     <div class="viewer-section">
       <div class="model-viewer-wrapper">
         <model-viewer id="viewer"
-          src="Furniture/EKTORP_KilandaBeige.glb"
-          alt="EKTORP 3-seat sofa, Kilanda light beige"
+          src="Furniture/HiveShelf90cm.glb"
+          alt="3D Model"
           ar ar-modes="scene-viewer webxr quick-look"
           camera-controls auto-rotate shadow-intensity="1"
-          poster="Furniture/EKTORP_KilandaBeige-poster.jpg"
           environment-image="neutral"
           exposure="1.13"
           style="width:100%;height:400px;">
         </model-viewer>
       </div>
       <div class="variant-row">
-        <span class="variant-label">Color/fabric options:</span>
-        <div class="variant-options" id="variant-options">
-          <img src="Furniture/EKTORP_KilandaBeige-thumb.jpg" class="variant-thumb selected" alt="Kilanda light beige" data-src="Furniture/EKTORP_KilandaBeige.glb" data-poster="Furniture/EKTORP_KilandaBeige-poster.jpg">
-          <img src="Furniture/EKTORP_HallarpGrey-thumb.jpg" class="variant-thumb" alt="Hallarp grey" data-src="Furniture/EKTORP_HallarpGrey.glb" data-poster="Furniture/EKTORP_HallarpGrey-poster.jpg">
-          <!-- Add more variants as needed -->
+        <span class="variant-label">Furniture models:</span>
+        <div class="variant-options" id="furniture-options">
+          <!-- Buttons inserted by JS -->
+        </div>
+      </div>
+      <div class="variant-row">
+        <span class="variant-label">Animal models:</span>
+        <div class="variant-options" id="animal-options">
+          <!-- Buttons inserted by JS -->
         </div>
       </div>
     </div>
     <div class="info-section">
       <div>
-        <div class="product-title">EKTORP</div>
-        <div class="product-price">₪1,495</div>
-        <div class="desc-short">
-          3-seat sofa, Kilanda light beige<br>
-          Plush comfort, classic style, removable washable cover.
+        <div class="product-title" id="model-title">HiveShelf90cm</div>
+        <div class="product-category" id="model-category">Furniture</div>
+        <div class="desc-short" id="model-desc">
+          3D model viewer demo. Select a model above to view it in 3D and AR.
         </div>
       </div>
-      <div class="option-row">
-        Size: 218x88x88 cm
+      <div class="option-row" id="model-dims">
+        <!-- Dimensions shown here -->
       </div>
-      <div class="option-row">
-        Cover: Kilanda light beige (100% polyester)
+      <div class="option-row" id="model-creator">
+        <!-- Creator shown here -->
       </div>
       <div class="purchase-row">
-        <button class="cta-btn">Add to cart</button>
         <button class="ar-btn" id="ar-btn">View in your home (AR)</button>
       </div>
-      <!-- You can add more info tabs or expandable areas here, for details, care, assembly etc. -->
     </div>
   </div>
   <script>
-    // Variant switch
-    document.querySelectorAll('.variant-thumb').forEach(thumb => {
-      thumb.addEventListener('click', function() {
-        document.querySelectorAll('.variant-thumb').forEach(t => t.classList.remove('selected'));
-        thumb.classList.add('selected');
-        let viewer = document.getElementById('viewer');
-        viewer.src = thumb.getAttribute('data-src');
-        viewer.poster = thumb.getAttribute('data-poster') || '';
+    // Model data (update as needed; can be loaded from JSON)
+    const FURNITURE = [
+      {
+        file: "Furniture/HiveShelf90cm.glb",
+        name: "HiveShelf90cm",
+        dimensions: "900mm × 400mm × 1800mm",
+        description: "A modern storage shelf, ideal for living rooms.",
+        creator: "Jane Doe"
+      },
+      {
+        file: "Furniture/ROMACouchTripoAcompressed.glb",
+        name: "ROMACouchTripoAcompressed",
+        dimensions: "2000mm × 900mm × 800mm",
+        description: "Classic Roma couch for modern interiors.",
+        creator: "Jane Doe"
+      },
+      {
+        file: "Furniture/ShiraTableAI.glb",
+        name: "ShiraTableAI",
+        dimensions: "1400mm × 800mm × 750mm",
+        description: "AI-designed Shira table.",
+        creator: "Jane Doe"
+      },
+      {
+        file: "Furniture/Sittingtable.glb",
+        name: "Sittingtable",
+        dimensions: "1200mm × 700mm × 400mm",
+        description: "Elegant sitting table for multipurpose use.",
+        creator: "John Smith"
+      },
+      {
+        file: "Furniture/SlimClosetAce.glb",
+        name: "SlimClosetAce",
+        dimensions: "500mm × 600mm × 1800mm",
+        description: "Slim closet for compact rooms.",
+        creator: "Jane Doe"
+      }
+    ];
+    const ANIMALS = [
+      {
+        file: "animals/Armadillo.glb",
+        name: "Armadillo",
+        dimensions: "450mm × 200mm × 150mm",
+        description: "A detailed 3D armadillo model.",
+        creator: "Wildlife Studio"
+      },
+      {
+        file: "animals/ArmadilloV2.glb",
+        name: "ArmadilloV2",
+        dimensions: "470mm × 210mm × 160mm",
+        description: "Updated armadillo model with extra detail.",
+        creator: "Wildlife Studio"
+      }
+    ];
+
+    // Utility to set the model
+    function setModel(model, category) {
+      const viewer = document.getElementById('viewer');
+      viewer.src = model.file;
+      viewer.alt = model.name + " 3D model";
+      document.getElementById('model-title').textContent = model.name;
+      document.getElementById('model-category').textContent = category;
+      document.getElementById('model-desc').textContent = model.description || '';
+      document.getElementById('model-dims').textContent = "Dimensions: " + (model.dimensions || '');
+      document.getElementById('model-creator').textContent = "Creator: " + (model.creator || '');
+    }
+
+    // Insert buttons for each category
+    function makeButtons(models, containerId, category) {
+      const wrap = document.getElementById(containerId);
+      wrap.innerHTML = '';
+      models.forEach((model, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'variant-btn' + (idx === 0 ? ' selected' : '');
+        btn.textContent = model.name;
+        btn.onclick = () => {
+          // Deselect all
+          wrap.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          // Also deselect in the other category
+          if (category === "Furniture") {
+            document.getElementById('animal-options').querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+          } else {
+            document.getElementById('furniture-options').querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+          }
+          setModel(model, category);
+        };
+        wrap.appendChild(btn);
       });
-    });
+    }
+
+    // Initial UI setup
+    makeButtons(FURNITURE, "furniture-options", "Furniture");
+    makeButtons(ANIMALS, "animal-options", "Animals");
+    setModel(FURNITURE[0], "Furniture");
+
     // AR button
     document.getElementById('ar-btn').onclick = () => {
       document.getElementById('viewer').activateAR();
-    }
+    };
   </script>
 </body>
 </html>
