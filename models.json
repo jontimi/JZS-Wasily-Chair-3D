@@ -1,13 +1,52 @@
 {
   "Furniture": [
-    "Furniture/HiveShelf90cm.glb",
-    "Furniture/ROMAcouchTripoAIcompressed.glb",
-    "Furniture/Sittingtable.glb", 
-    "Furniture/ShiraTableAI.glb",
-    "Furniture/SlimClosetAce.glb"
+    {
+      "file": "Furniture/HiveShelf90cm.glb",
+      "name": "HiveShelf90cm",
+      "thumbnail": "Furniture/HiveShelf90cm.jpg",
+      "dimensions": "90cm × 30cm × 180cm",
+      "description": "A modular honeycomb-style shelf.",
+      "creator": "J. Smith",
+      "poster": "Furniture/HiveShelf90cm-poster.jpg",
+      "hotspots": [
+        {
+          "name": "Shelf Top",
+          "position": "0 1.7 0",
+          "normal": "0 1 0",
+          "label": "Top shelf for small items"
+        }
+      ]
+    },
+    {
+      "file": "Furniture/Sittingtable.glb",
+      "name": "Sittingtable",
+      "thumbnail": "Furniture/Sittingtable.jpg",
+      "dimensions": "120cm × 60cm × 45cm",
+      "description": "A low sitting table for living rooms.",
+      "creator": "A. Lee",
+      "poster": "Furniture/Sittingtable-poster.jpg",
+      "hotspots": [
+        {
+          "name": "Tabletop",
+          "position": "0 0.45 0",
+          "normal": "0 1 0",
+          "label": "Spacious tabletop"
+        }
+      ]
+    }
+    // ...other models...
   ],
   "Animals": [
-    "animals/Armadillo.glb",
-    "animals/ArmadilloV2.glb"
+    {
+      "file": "animals/Armadillo.glb",
+      "name": "Armadillo",
+      "thumbnail": "animals/Armadillo.jpg",
+      "dimensions": "75cm × 35cm × 25cm",
+      "description": "A detailed armadillo model.",
+      "creator": "T. Brown",
+      "poster": "animals/Armadillo-poster.jpg",
+      "hotspots": []
+    }
+    // ...other models...
   ]
 }
