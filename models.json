@@ -3,6 +3,10 @@
     {
       "file": "Furniture/HiveShelf90cm.glb",
       "name": "HiveShelf90cm",
+      "colors": [
+        {"name": "Natural Wood", "file": "Furniture/HiveShelf90cm.glb"},
+        {"name": "White", "file": "Furniture/HiveShelf90cm_white.glb"}
+      ],
       "dimensions": "900mm × 400mm × 1800mm",
       "description": "A modern storage shelf, ideal for living rooms.",
       "creator": "Jane Doe"
@@ -10,6 +14,10 @@
     {
       "file": "Furniture/ROMAcouchTripoAIcompressed.glb",
       "name": "ROMAcouchTripoAIcompressed",
+      "colors": [
+        {"name": "Brown", "file": "Furniture/ROMAcouchTripoAIcompressed.glb"},
+        {"name": "Dark Grey", "file": "Furniture/ROMAcouchTripoAIcompressed_darkgrey.glb"}
+      ],
       "dimensions": "2000mm × 900mm × 800mm",
       "description": "Classic Roma couch for modern interiors.",
       "creator": "Jane Doe"
@@ -17,6 +25,9 @@
     {
       "file": "Furniture/ShiraTableAI.glb",
       "name": "ShiraTableAI",
+      "colors": [
+        {"name": "Oak", "file": "Furniture/ShiraTableAI.glb"}
+      ],
       "dimensions": "1400mm × 800mm × 750mm",
       "description": "AI-designed Shira table.",
       "creator": "Jane Doe"
@@ -24,6 +35,9 @@
     {
       "file": "Furniture/Sittingtable.glb",
       "name": "Sittingtable",
+      "colors": [
+        {"name": "Walnut", "file": "Furniture/Sittingtable.glb"}
+      ],
       "dimensions": "1200mm × 700mm × 400mm",
       "description": "Elegant sitting table for multipurpose use.",
       "creator": "John Smith"
@@ -31,6 +45,9 @@
     {
       "file": "Furniture/SlimClosetAce.glb",
       "name": "SlimClosetAce",
+      "colors": [
+        {"name": "White", "file": "Furniture/SlimClosetAce.glb"}
+      ],
       "dimensions": "500mm × 600mm × 1800mm",
       "description": "Slim closet for compact rooms.",
       "creator": "Jane Doe"
@@ -40,6 +57,9 @@
     {
       "file": "animals/Armadillo.glb",
       "name": "Armadillo",
+      "colors": [
+        {"name": "Natural", "file": "animals/Armadillo.glb"}
+      ],
       "dimensions": "450mm × 200mm × 150mm",
       "description": "A detailed 3D armadillo model.",
       "creator": "Wildlife Studio"
@@ -47,6 +67,9 @@
     {
       "file": "animals/ArmadilloV2.glb",
       "name": "ArmadilloV2",
+      "colors": [
+        {"name": "Natural V2", "file": "animals/ArmadilloV2.glb"}
+      ],
       "dimensions": "470mm × 210mm × 160mm",
       "description": "Updated armadillo model with extra detail.",
       "creator": "Wildlife Studio"
