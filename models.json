@@ -5,12 +5,11 @@
       "name": "HiveShelf90cm",
       "dimensions": "900mm × 400mm × 1800mm",
       "description": "A modern storage shelf, ideal for living rooms.",
-      "creator": "Jane Doe",
-      "thumbnail": "Furniture/HiveShelf90cm.jpg"
+      "creator": "Jane Doe"
     },
     {
       "file": "Furniture/ROMACouchTripoAcompressed.glb",
-      "name": "ROMACouchTripoA",
+      "name": "ROMACouchTripoAcompressed",
       "dimensions": "2000mm × 900mm × 800mm",
       "description": "Classic Roma couch for modern interiors.",
       "creator": "Jane Doe"
@@ -43,8 +42,7 @@
       "name": "Armadillo",
       "dimensions": "450mm × 200mm × 150mm",
       "description": "A detailed 3D armadillo model.",
-      "creator": "Wildlife Studio",
-      "thumbnail": "animals/Armadillo.jpg"
+      "creator": "Wildlife Studio"
     },
     {
       "file": "animals/ArmadilloV2.glb",
