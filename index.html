@@ -49,7 +49,6 @@
       min-height: 100vh;
       max-width: 1200px;
       margin: 0 auto;
-      background: #fff;
       background: var(--main-bg);
       box-shadow: 0 2px 16px 0 #0001;
       border-radius: 20px;
@@ -224,20 +223,20 @@
       <h2>Select a 3D Model</h2>
       <div class="config-group">
         <span class="group-label">Category</span>
-        <select id="cat-dropdown" class="option-dropdown" aria-label="Category">
-          <option value="Furniture">Furniture</option>
-          <option value="Animals">Animals</option>
-        </select>
+        <select id="cat-dropdown" class="option-dropdown" aria-label="Category"></select>
       </div>
       <div class="config-group">
         <span class="group-label">Model</span>
-        <select id="model-dropdown" class="option-dropdown" aria-label="Model">
-          <!-- Model options inserted by JS -->
-        </select>
+        <select id="model-dropdown" class="option-dropdown" aria-label="Model"></select>
+      </div>
+      <div class="config-group">
+        <span class="group-label">Color</span>
+        <select id="color-dropdown" class="option-dropdown" aria-label="Color"></select>
       </div>
       <div class="summary-panel" id="summary-panel">
         <div class="summary-row"><span>Category:</span> <strong id="sum-cat">Furniture</strong></div>
         <div class="summary-row"><span>Model:</span> <strong id="sum-model">HiveShelf90cm</strong></div>
+        <div class="summary-row"><span>Color:</span> <strong id="sum-color">Natural</strong></div>
       </div>
       <button class="ar-btn" id="ar-btn">View in AR</button>
     </div>
@@ -259,6 +258,19 @@
     let CATEGORIES = {};
     let currentCat = "Furniture";
     let currentModelIdx = 0;
+    let currentColorIdx = 0;
+
+    function renderCategoryDropdown() {
+      const catDropdown = document.getElementById("cat-dropdown");
+      catDropdown.innerHTML = '';
+      Object.keys(CATEGORIES).forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        catDropdown.appendChild(opt);
+      });
+      catDropdown.value = currentCat;
+    }
 
     function renderModelDropdown(category) {
       const modelDropdown = document.getElementById("model-dropdown");
@@ -269,28 +281,53 @@
         opt.textContent = model.name;
         modelDropdown.appendChild(opt);
       });
-      modelDropdown.selectedIndex = 0;
+      modelDropdown.selectedIndex = currentModelIdx;
+    }
+
+    function renderColorDropdown(category, modelIdx) {
+      const colorDropdown = document.getElementById("color-dropdown");
+      colorDropdown.innerHTML = '';
+      const model = CATEGORIES[category][modelIdx];
+      const colors = model.colors || [{name: "Default", file: model.file}];
+      colors.forEach((color, i) => {
+        const opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = color.name || "Default";
+        colorDropdown.appendChild(opt);
+      });
+      colorDropdown.selectedIndex = currentColorIdx;
     }
 
     function setModel() {
       const model = CATEGORIES[currentCat][currentModelIdx];
-      document.getElementById('viewer').src = model.file;
+      const colors = model.colors || [{name: "Default", file: model.file}];
+      const color = colors[currentColorIdx] || colors[0];
+
+      document.getElementById('viewer').src = color.file;
       document.getElementById('viewer-title').textContent = model.name;
       document.getElementById('sum-cat').textContent = currentCat;
       document.getElementById('sum-model').textContent = model.name;
+      document.getElementById('sum-color').textContent = color.name || "Default";
     }
 
-    // Category dropdown
     document.getElementById("cat-dropdown").addEventListener("change", function() {
       currentCat = this.value;
       currentModelIdx = 0;
+      currentColorIdx = 0;
       renderModelDropdown(currentCat);
+      renderColorDropdown(currentCat, currentModelIdx);
       setModel();
     });
 
-    // Model dropdown
     document.getElementById("model-dropdown").addEventListener("change", function() {
       currentModelIdx = parseInt(this.value, 10);
+      currentColorIdx = 0;
+      renderColorDropdown(currentCat, currentModelIdx);
+      setModel();
+    });
+
+    document.getElementById("color-dropdown").addEventListener("change", function() {
+      currentColorIdx = parseInt(this.value, 10);
       setModel();
     });
 
@@ -299,7 +336,9 @@
       .then(r => r.json())
       .then(data => {
         CATEGORIES = data;
+        renderCategoryDropdown();
         renderModelDropdown(currentCat);
+        renderColorDropdown(currentCat, currentModelIdx);
         setModel();
       });
 
