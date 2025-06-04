@@ -254,7 +254,6 @@
     </div>
   </div>
   <script>
-    // Fetch data from models.json
     let CATEGORIES = {};
     let currentCat = "Furniture";
     let currentModelIdx = 0;
@@ -288,7 +287,10 @@
       const colorDropdown = document.getElementById("color-dropdown");
       colorDropdown.innerHTML = '';
       const model = CATEGORIES[category][modelIdx];
-      const colors = model.colors || [{name: "Default", file: model.file}];
+      let colors = [{name: "Default", file: model.file}];
+      if (model.colors && Array.isArray(model.colors) && model.colors.length > 0) {
+        colors = model.colors;
+      }
       colors.forEach((color, i) => {
         const opt = document.createElement('option');
         opt.value = String(i);
@@ -300,9 +302,11 @@
 
     function setModel() {
       const model = CATEGORIES[currentCat][currentModelIdx];
-      const colors = model.colors || [{name: "Default", file: model.file}];
+      let colors = [{name: "Default", file: model.file}];
+      if (model.colors && Array.isArray(model.colors) && model.colors.length > 0) {
+        colors = model.colors;
+      }
       const color = colors[currentColorIdx] || colors[0];
-
       document.getElementById('viewer').src = color.file;
       document.getElementById('viewer-title').textContent = model.name;
       document.getElementById('sum-cat').textContent = currentCat;
@@ -331,7 +335,6 @@
       setModel();
     });
 
-    // Load models.json and initialize
     fetch('models.json')
       .then(r => r.json())
       .then(data => {
@@ -342,12 +345,10 @@
         setModel();
       });
 
-    // AR Button
     document.getElementById("ar-btn").onclick = () => {
       document.getElementById("viewer").activateAR();
     };
 
-    // Night Mode
     const nightBtn = document.getElementById("nightToggle");
     nightBtn.addEventListener("click", function() {
       document.body.classList.toggle("night");
