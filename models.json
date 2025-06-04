@@ -3,50 +3,46 @@
     {
       "file": "Furniture/HiveShelf90cm.glb",
       "name": "HiveShelf90cm",
+      "dimensions": "900mm × 400mm × 1800mm",
+      "description": "A modern storage shelf, ideal for living rooms.",
+      "creator": "Jane Doe",
       "thumbnail": "Furniture/HiveShelf90cm.jpg",
-      "dimensions": "90cm × 30cm × 180cm",
-      "description": "A modular honeycomb-style shelf.",
-      "creator": "J. Smith",
       "poster": "Furniture/HiveShelf90cm-poster.jpg",
       "hotspots": [
         {
-          "name": "Shelf Top",
-          "position": "0 1.7 0",
+          "position": "0 0.9 0",
           "normal": "0 1 0",
-          "label": "Top shelf for small items"
+          "label": "Top Shelf"
         }
       ]
     },
     {
       "file": "Furniture/Sittingtable.glb",
       "name": "Sittingtable",
+      "dimensions": "1200mm × 700mm × 400mm",
+      "description": "Elegant sitting table for multipurpose use.",
+      "creator": "John Smith",
       "thumbnail": "Furniture/Sittingtable.jpg",
-      "dimensions": "120cm × 60cm × 45cm",
-      "description": "A low sitting table for living rooms.",
-      "creator": "A. Lee",
       "poster": "Furniture/Sittingtable-poster.jpg",
       "hotspots": [
         {
-          "name": "Tabletop",
-          "position": "0 0.45 0",
+          "position": "0 0.4 0",
           "normal": "0 1 0",
-          "label": "Spacious tabletop"
+          "label": "Tabletop"
         }
       ]
     }
-    // ...other models...
   ],
   "Animals": [
     {
       "file": "animals/Armadillo.glb",
       "name": "Armadillo",
+      "dimensions": "450mm × 200mm × 150mm",
+      "description": "A detailed 3D armadillo model.",
+      "creator": "Wildlife Studio",
       "thumbnail": "animals/Armadillo.jpg",
-      "dimensions": "75cm × 35cm × 25cm",
-      "description": "A detailed armadillo model.",
-      "creator": "T. Brown",
       "poster": "animals/Armadillo-poster.jpg",
       "hotspots": []
     }
-    // ...other models...
   ]
 }
