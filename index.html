@@ -1,96 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>3D Model Viewer with AR</title>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 2em;
-      background: #f7f7f7;
-    }
-    model-viewer {
-      width: 100%;
-      max-width: 600px;
-      height: 500px;
-      margin: 2em auto;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.1);
-    }
-    .selector {
-      margin-bottom: 1.5em;
-      font-size: 1.1em;
-      padding: 0.5em 1em;
-    }
-    optgroup {
-      font-style: normal;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <h1>3D Model Viewer with AR</h1>
-  <label for="model-select">Choose a model:</label>
-  <select id="model-select" class="selector">
-    <option>Loading models...</option>
-  </select>
-  <model-viewer
-    id="viewer"
-    src=""
-    alt="3D model"
-    ar
-    ar-modes="scene-viewer webxr quick-look"
-    camera-controls
-    auto-rotate
-    shadow-intensity="1"
-    style="width: 100%; height: 500px;"
-  >
-    <button slot="ar-button" style="background:#0078D4; color:white; padding:1em; border:none; border-radius:5px;">
-      View in your space (AR)
-    </button>
-  </model-viewer>
-  <p>Share your 3D models with AR support using <a href="https://modelviewer.dev/" target="_blank">model-viewer</a>!</p>
-  <script>
-    fetch('models.json')
-      .then(response => {
-        if (!response.ok) throw new Error("models.json not found or invalid!");
-        return response.json();
-      })
-      .then(models => {
-        const select = document.getElementById('model-select');
-        select.innerHTML = ""; // Clear initial loading option
-        let firstModelSrc = "";
-        for (const category in models) {
-          const optgroup = document.createElement('optgroup');
-          optgroup.label = category;
-          models[category].forEach(modelPath => {
-            const name = modelPath.split('/').pop().replace('.glb','');
-            const option = document.createElement('option');
-            option.value = modelPath;
-            option.text = name;
-            optgroup.appendChild(option);
-            if (!firstModelSrc) firstModelSrc = modelPath;
-          });
-          select.appendChild(optgroup);
+{
+  "Furniture": [
+    {
+      "file": "Furniture/HiveShelf90cm.glb",
+      "name": "HiveShelf90cm",
+      "thumbnail": "Furniture/HiveShelf90cm.jpg",
+      "dimensions": "90cm × 30cm × 180cm",
+      "description": "A modular honeycomb-style shelf.",
+      "creator": "J. Smith",
+      "poster": "Furniture/HiveShelf90cm-poster.jpg",
+      "hotspots": [
+        {
+          "name": "Shelf Top",
+          "position": "0 1.7 0",
+          "normal": "0 1 0",
+          "label": "Top shelf for small items"
         }
-        // Set the first model as default
-        const viewer = document.getElementById('viewer');
-        select.value = firstModelSrc;
-        viewer.src = firstModelSrc;
-        viewer.alt = select.options[select.selectedIndex].text + ' 3D model';
-
-        select.addEventListener('change', () => {
-          viewer.src = select.value;
-          viewer.alt = select.options[select.selectedIndex].text + ' 3D model';
-        });
-      })
-      .catch(err => {
-        document.getElementById('model-select').innerHTML = '<option>Error loading models.json</option>';
-        console.error(err);
-      });
-  </script>
-</body>
-</html>
+      ]
+    },
+    {
+      "file": "Furniture/Sittingtable.glb",
+      "name": "Sittingtable",
+      "thumbnail": "Furniture/Sittingtable.jpg",
+      "dimensions": "120cm × 60cm × 45cm",
+      "description": "A low sitting table for living rooms.",
+      "creator": "A. Lee",
+      "poster": "Furniture/Sittingtable-poster.jpg",
+      "hotspots": [
+        {
+          "name": "Tabletop",
+          "position": "0 0.45 0",
+          "normal": "0 1 0",
+          "label": "Spacious tabletop"
+        }
+      ]
+    }
+    // ...other models...
+  ],
+  "Animals": [
+    {
+      "file": "animals/Armadillo.glb",
+      "name": "Armadillo",
+      "thumbnail": "animals/Armadillo.jpg",
+      "dimensions": "75cm × 35cm × 25cm",
+      "description": "A detailed armadillo model.",
+      "creator": "T. Brown",
+      "poster": "animals/Armadillo-poster.jpg",
+      "hotspots": []
+    }
+    // ...other models...
+  ]
+}
