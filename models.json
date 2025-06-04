@@ -6,31 +6,35 @@
       "dimensions": "900mm × 400mm × 1800mm",
       "description": "A modern storage shelf, ideal for living rooms.",
       "creator": "Jane Doe",
-      "thumbnail": "Furniture/HiveShelf90cm.jpg",
-      "poster": "Furniture/HiveShelf90cm-poster.jpg",
-      "hotspots": [
-        {
-          "position": "0 0.9 0",
-          "normal": "0 1 0",
-          "label": "Top Shelf"
-        }
-      ]
+      "thumbnail": "Furniture/HiveShelf90cm.jpg"
+    },
+    {
+      "file": "Furniture/ROMACouchTripoAcompressed.glb",
+      "name": "ROMACouchTripoA",
+      "dimensions": "2000mm × 900mm × 800mm",
+      "description": "Classic Roma couch for modern interiors.",
+      "creator": "Jane Doe"
+    },
+    {
+      "file": "Furniture/ShiraTableAI.glb",
+      "name": "ShiraTableAI",
+      "dimensions": "1400mm × 800mm × 750mm",
+      "description": "AI-designed Shira table.",
+      "creator": "Jane Doe"
     },
     {
       "file": "Furniture/Sittingtable.glb",
       "name": "Sittingtable",
       "dimensions": "1200mm × 700mm × 400mm",
       "description": "Elegant sitting table for multipurpose use.",
-      "creator": "John Smith",
-      "thumbnail": "Furniture/Sittingtable.jpg",
-      "poster": "Furniture/Sittingtable-poster.jpg",
-      "hotspots": [
-        {
-          "position": "0 0.4 0",
-          "normal": "0 1 0",
-          "label": "Tabletop"
-        }
-      ]
+      "creator": "John Smith"
+    },
+    {
+      "file": "Furniture/SlimClosetAce.glb",
+      "name": "SlimClosetAce",
+      "dimensions": "500mm × 600mm × 1800mm",
+      "description": "Slim closet for compact rooms.",
+      "creator": "Jane Doe"
     }
   ],
   "Animals": [
@@ -40,9 +44,14 @@
       "dimensions": "450mm × 200mm × 150mm",
       "description": "A detailed 3D armadillo model.",
       "creator": "Wildlife Studio",
-      "thumbnail": "animals/Armadillo.jpg",
-      "poster": "animals/Armadillo-poster.jpg",
-      "hotspots": []
+      "thumbnail": "animals/Armadillo.jpg"
+    },
+    {
+      "file": "animals/ArmadilloV2.glb",
+      "name": "ArmadilloV2",
+      "dimensions": "470mm × 210mm × 160mm",
+      "description": "Updated armadillo model with extra detail.",
+      "creator": "Wildlife Studio"
     }
   ]
 }
