@@ -37,9 +37,7 @@
       --ar-btn-bg-hover: #2379be;
       --ar-btn-txt: #232b39;
     }
-    html {
-      font-size: 16px;
-    }
+    html { font-size: 16px; }
     body {
       font-family: 'Inter', Arial, sans-serif;
       margin: 0;
@@ -79,10 +77,9 @@
       margin-bottom: 1.1em;
       letter-spacing: 0.01em;
     }
-    .night-toggle-btn {
+    .night-toggle-btn, .lang-toggle-btn {
       position: absolute;
       top: 1.2rem;
-      right: 1.2rem;
       background: var(--btn-bg);
       color: var(--accent);
       border: 1.5px solid var(--btn-border);
@@ -95,7 +92,9 @@
       z-index: 10;
       box-shadow: 0 2px 6px #0002;
     }
-    .night .night-toggle-btn {
+    .night-toggle-btn { right: 1.2rem; }
+    .lang-toggle-btn { right: 8.4rem; }
+    .night .night-toggle-btn, .night .lang-toggle-btn {
       color: #f3f6fa;
       background: #2a3546;
       border: 1.5px solid #5caaff;
@@ -148,24 +147,32 @@
       color: var(--accent);
       font-weight: 600;
     }
-    .ar-btn {
+    .action-btns {
       margin-top: 1.2em;
+      display: flex;
+      gap: 0.7em;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .ar-btn, .screenshot-btn, .switcher-btn {
       background: var(--ar-btn-bg);
       color: var(--ar-btn-txt);
       border: none;
-      padding: 0.85em 0;
-      width: 100%;
-      font-size: 1.1em;
+      padding: 0.8em 0.5em;
+      font-size: 1.07em;
       font-weight: 700;
       border-radius: 8px;
       cursor: pointer;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.01em;
       box-shadow: 0 0.5px 3px #0078d71a;
       transition: background 0.2s, color 0.2s;
-      min-height: 2.8em;
-      margin-bottom: 0.5em;
+      min-width: 0;
+      flex: 1 1 40%;
+      min-height: 2.7em;
+      outline: none;
     }
-    .ar-btn:hover, .ar-btn:active {
+    .ar-btn:hover, .screenshot-btn:hover, .switcher-btn:hover,
+    .ar-btn:focus, .screenshot-btn:focus, .switcher-btn:focus {
       background: var(--ar-btn-bg-hover);
     }
     .viewer-panel {
@@ -221,7 +228,7 @@
       model-viewer { height: 200px; min-width: 0; }
       .viewer-title { font-size: 1.05em; }
       .summary-panel { font-size: 0.96em; }
-      .ar-btn { font-size: 1em; }
+      .ar-btn, .screenshot-btn, .switcher-btn { font-size: 1em; }
     }
     @media (max-width: 480px) {
       html { font-size: 13px; }
@@ -231,48 +238,140 @@
       model-viewer { height: 120px; }
       .viewer-title { font-size: 0.98em; }
       .summary-panel { font-size: 0.93em; }
-      .ar-btn { font-size: 0.97em; min-height: 2.2em; }
+      .ar-btn, .screenshot-btn, .switcher-btn { font-size: 0.97em; min-height: 2.2em; }
+    }
+    /* Accessibility Focus */
+    .ar-btn:focus, .screenshot-btn:focus, .switcher-btn:focus {
+      outline: 2.5px solid var(--accent);
+      outline-offset: 2px;
+    }
+    /* RTL Support */
+    body[dir="rtl"] .side-panel,
+    body[dir="rtl"] .summary-panel,
+    body[dir="rtl"] .viewer-title {
+      text-align: right;
+    }
+    body[dir="rtl"] select, 
+    body[dir="rtl"] button, 
+    body[dir="rtl"] input {
+      direction: rtl;
+    }
+    body[dir="rtl"] .summary-row {
+      flex-direction: row-reverse;
     }
   </style>
 </head>
 <body>
   <div class="main-wrap">
     <div class="side-panel">
-      <button class="night-toggle-btn" id="nightToggle" title="Toggle Night Mode">🌙 Night Mode</button>
-      <h2>Select a 3D Model</h2>
+      <button class="lang-toggle-btn" id="langToggle" aria-pressed="false">🇮🇱 עברית</button>
+      <button class="night-toggle-btn" id="nightToggle" title="Toggle Night Mode" aria-pressed="false">🌙 Night Mode</button>
+      <h2 id="main-title">Select a 3D Model</h2>
       <div class="config-group">
-        <span class="group-label">Category</span>
+        <label class="group-label" for="cat-dropdown">Category</label>
         <select id="cat-dropdown" class="option-dropdown" aria-label="Category"></select>
       </div>
       <div class="config-group">
-        <span class="group-label">Model</span>
+        <label class="group-label" for="model-dropdown">Model</label>
         <select id="model-dropdown" class="option-dropdown" aria-label="Model"></select>
       </div>
       <div class="config-group">
-        <span class="group-label">Color</span>
+        <label class="group-label" for="color-dropdown">Color</label>
         <select id="color-dropdown" class="option-dropdown" aria-label="Color"></select>
       </div>
-      <div class="summary-panel" id="summary-panel">
+      <div class="summary-panel" id="summary-panel" aria-live="polite">
         <div class="summary-row"><span>Category:</span> <strong id="sum-cat">Furniture</strong></div>
         <div class="summary-row"><span>Model:</span> <strong id="sum-model">HiveShelf90cm</strong></div>
         <div class="summary-row"><span>Color:</span> <strong id="sum-color">Natural</strong></div>
       </div>
-      <button class="ar-btn" id="ar-btn">View in AR</button>
+      <div class="action-btns">
+        <button class="ar-btn" id="ar-btn" aria-label="View in AR">View in AR</button>
+        <button class="screenshot-btn" id="screenshot-btn" aria-label="Download Screenshot">⬇️ Screenshot</button>
+        <button class="switcher-btn" id="switcher-btn" aria-label="Switch Model" title="Switch to previous or next model">⏮️⏭️ Switch</button>
+      </div>
     </div>
     <div class="viewer-panel">
-      <div class="viewer-title" id="viewer-title">HiveShelf90cm</div>
+      <div class="viewer-title" id="viewer-title" tabindex="0" aria-live="polite">HiveShelf90cm</div>
       <model-viewer id="viewer"
         src="Furniture/HiveShelf90cm.glb"
-        alt="3D preview"
+        alt="3D preview of HiveShelf90cm"
         ar ar-modes="scene-viewer webxr quick-look"
         camera-controls auto-rotate shadow-intensity="1"
         environment-image="neutral"
         exposure="1.13"
-        style="width:100%;height:350px;">
+        style="width:100%;height:350px;"
+        tabindex="0"
+        aria-label="3D model viewer"
+        reveal="interaction"
+        loading="eager"
+        poster="poster.png">
       </model-viewer>
     </div>
   </div>
   <script>
+    // Translation dictionary
+    const translations = {
+      en: {
+        selectModel: "Select a 3D Model",
+        category: "Category",
+        model: "Model",
+        color: "Color",
+        viewInAR: "View in AR",
+        screenshot: "⬇️ Screenshot",
+        switch: "⏮️⏭️ Switch",
+        summary: {
+          category: "Category:",
+          model: "Model:",
+          color: "Color:"
+        },
+        night: "🌙 Night Mode",
+        light: "☀️ Light Mode",
+        lang: "🇮🇱 עברית"
+      },
+      he: {
+        selectModel: "בחר מודל תלת מימד",
+        category: "קטגוריה",
+        model: "מודל",
+        color: "צבע",
+        viewInAR: "צפה ב-AR",
+        screenshot: "⬇️ צילום מסך",
+        switch: "⏮️⏭️ החלף",
+        summary: {
+          category: "קטגוריה:",
+          model: "מודל:",
+          color: "צבע:"
+        },
+        night: "🌙 מצב לילה",
+        light: "☀️ מצב יום",
+        lang: "🇬🇧 English"
+      }
+    };
+    let currentLang = "en";
+
+    // UI dictionary references
+    function updateLanguage() {
+      const t = translations[currentLang];
+      document.getElementById("main-title").textContent = t.selectModel;
+      document.querySelector("label[for='cat-dropdown']").textContent = t.category;
+      document.querySelector("label[for='model-dropdown']").textContent = t.model;
+      document.querySelector("label[for='color-dropdown']").textContent = t.color;
+      document.getElementById("ar-btn").textContent = t.viewInAR;
+      document.getElementById("screenshot-btn").textContent = t.screenshot;
+      document.getElementById("switcher-btn").textContent = t.switch;
+      // Summary labels
+      document.querySelector("#summary-panel .summary-row:nth-child(1) span").textContent = t.summary.category;
+      document.querySelector("#summary-panel .summary-row:nth-child(2) span").textContent = t.summary.model;
+      document.querySelector("#summary-panel .summary-row:nth-child(3) span").textContent = t.summary.color;
+      // Night mode toggle
+      const nightBtn = document.getElementById("nightToggle");
+      const isNight = document.body.classList.contains("night");
+      nightBtn.innerHTML = isNight ? t.light : t.night;
+      // Language toggle button
+      document.getElementById("langToggle").textContent = t.lang;
+      // Set direction
+      document.body.dir = (currentLang === "he") ? "rtl" : "ltr";
+    }
+
     let CATEGORIES = {};
     let currentCat = "Furniture";
     let currentModelIdx = 0;
@@ -326,11 +425,15 @@
         colors = model.colors;
       }
       const color = colors[currentColorIdx] || colors[0];
-      document.getElementById('viewer').src = color.file;
+      const mv = document.getElementById('viewer');
+      mv.src = color.file;
+      mv.alt = `3D preview of ${model.name} (${color.name || "Default"})`;
       document.getElementById('viewer-title').textContent = model.name;
       document.getElementById('sum-cat').textContent = currentCat;
       document.getElementById('sum-model').textContent = model.name;
       document.getElementById('sum-color').textContent = color.name || "Default";
+      // Accessibility: update live region
+      document.getElementById('viewer-title').setAttribute('aria-label', model.name);
     }
 
     document.getElementById("cat-dropdown").addEventListener("change", function() {
@@ -362,20 +465,101 @@
         renderModelDropdown(currentCat);
         renderColorDropdown(currentCat, currentModelIdx);
         setModel();
+        updateLanguage();
       });
 
+    // AR Button
     document.getElementById("ar-btn").onclick = () => {
       document.getElementById("viewer").activateAR();
     };
 
+    // Screenshot Button
+    document.getElementById("screenshot-btn").onclick = async function () {
+      const viewer = document.getElementById("viewer");
+      if (!viewer.loaded) await viewer.updateComplete;
+      const blob = await viewer.toBlob({ idealAspect: true });
+      const modelName = document.getElementById("viewer-title").textContent.replace(/\s+/g,'_');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = modelName + "_screenshot.png";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        URL.revokeObjectURL(a.href);
+        a.remove();
+      }, 500);
+    };
+
+    // Model Switcher Button (previous/next model in current category)
+    document.getElementById("switcher-btn").onclick = function (e) {
+      const models = CATEGORIES[currentCat];
+      if (models.length < 2) return;
+      if (e && e.shiftKey) {
+        currentModelIdx = (currentModelIdx - 1 + models.length) % models.length;
+      } else {
+        currentModelIdx = (currentModelIdx + 1) % models.length;
+      }
+      document.getElementById("model-dropdown").selectedIndex = currentModelIdx;
+      currentColorIdx = 0;
+      renderColorDropdown(currentCat, currentModelIdx);
+      setModel();
+      document.getElementById('viewer-title').focus();
+    };
+
+    document.getElementById("switcher-btn").addEventListener("keydown", function(e) {
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        this.dispatchEvent(new MouseEvent("click", { shiftKey: true }));
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        this.dispatchEvent(new MouseEvent("click"));
+      }
+    });
+
+    // Accessibility: focus indicators for dropdowns
+    ["cat-dropdown", "model-dropdown", "color-dropdown"].forEach(id => {
+      document.getElementById(id).addEventListener('focus', function() {
+        this.setAttribute('aria-activedescendant', this.options[this.selectedIndex].id || '');
+      });
+    });
+
+    // Night mode toggle
     const nightBtn = document.getElementById("nightToggle");
     nightBtn.addEventListener("click", function() {
       document.body.classList.toggle("night");
-      if(document.body.classList.contains("night")) {
-        nightBtn.innerHTML = "☀️ Light Mode";
-      } else {
-        nightBtn.innerHTML = "🌙 Night Mode";
+      const isNight = document.body.classList.contains("night");
+      nightBtn.innerHTML = isNight ? translations[currentLang].light : translations[currentLang].night;
+      nightBtn.setAttribute("aria-pressed", isNight);
+    });
+
+    // Language switch button
+    document.getElementById("langToggle").addEventListener("click", function() {
+      currentLang = (currentLang === "en") ? "he" : "en";
+      updateLanguage();
+    });
+
+    // Accessibility: Allow "m" for next model, "M" for previous model
+    document.addEventListener('keydown', function(e) {
+      if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "SELECT" || document.activeElement.isContentEditable) return;
+      if (e.key === "m") {
+        document.getElementById("switcher-btn").click();
+      } else if (e.key === "M") {
+        document.getElementById("switcher-btn").dispatchEvent(new MouseEvent("click", { shiftKey: true }));
       }
+    });
+
+    // Accessibility: Announce when screenshot is downloaded
+    document.getElementById("screenshot-btn").addEventListener("click", function() {
+      const panel = document.getElementById("summary-panel");
+      panel.setAttribute("aria-live", "assertive");
+      panel.innerHTML += "<div style='font-size:0.95em;color:green;'>" + 
+        (currentLang === "he" ? "צילום נשמר!" : "Screenshot downloaded!") +
+        "</div>";
+      setTimeout(() => {
+        panel.setAttribute("aria-live", "polite");
+        const last = panel.querySelector("div:last-child");
+        if (last && (last.textContent.includes("Screenshot downloaded!") || last.textContent.includes("צילום נשמר"))) last.remove();
+      }, 1800);
     });
   </script>
 </body>
