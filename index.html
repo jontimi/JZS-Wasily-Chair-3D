@@ -207,7 +207,6 @@
       transition: background 0.35s;
       display: block;
     }
-    /* Responsive design */
     @media (max-width: 1100px) {
       .main-wrap { flex-direction: column; border-radius: 0; }
       .side-panel { width: 100%; min-width: 0; border-right: none; border-bottom: 1px solid var(--panel-border); flex-direction: row; flex-wrap: wrap; gap: 1.2em; }
@@ -240,12 +239,10 @@
       .summary-panel { font-size: 0.93em; }
       .ar-btn, .screenshot-btn, .switcher-btn { font-size: 0.97em; min-height: 2.2em; }
     }
-    /* Accessibility Focus */
     .ar-btn:focus, .screenshot-btn:focus, .switcher-btn:focus {
       outline: 2.5px solid var(--accent);
       outline-offset: 2px;
     }
-    /* RTL Support */
     body[dir="rtl"] .side-panel,
     body[dir="rtl"] .summary-panel,
     body[dir="rtl"] .viewer-title {
@@ -309,7 +306,7 @@
     </div>
   </div>
   <script>
-    // Translation dictionary
+    // Translation dictionary with categories and models
     const translations = {
       en: {
         selectModel: "Select a 3D Model",
@@ -326,7 +323,21 @@
         },
         night: "🌙 Night Mode",
         light: "☀️ Light Mode",
-        lang: "🇮🇱 עברית"
+        lang: "🇮🇱 עברית",
+        categories: {
+          "Furniture": "Furniture",
+          "Animals": "Animals"
+        },
+        models: {
+          // Example: "HiveShelf90cm": "HiveShelf90cm"
+        },
+        colors: {
+          "Natural": "Natural",
+          "Oak": "Oak",
+          "Black": "Black",
+          "White": "White",
+          "Default": "Default"
+        }
       },
       he: {
         selectModel: "בחר מודל תלת מימד",
@@ -343,39 +354,46 @@
         },
         night: "🌙 מצב לילה",
         light: "☀️ מצב יום",
-        lang: "🇬🇧 English"
+        lang: "🇬🇧 English",
+        categories: {
+          "Furniture": "רהיטים",
+          "Animals": "חיות"
+        },
+        models: {
+          // Example: "HiveShelf90cm": "כוורת 90 ס\"מ"
+        },
+        colors: {
+          "Natural": "עץ טבעי",
+          "Oak": "אלון",
+          "Black": "שחור",
+          "White": "לבן",
+          "Default": "ברירת מחדל"
+        }
       }
     };
+
+    // Example: Add your real models here
+    translations.en.models = {
+      "HiveShelf90cm": "HiveShelf90cm",
+      "Cat": "Cat",
+      "Dog": "Dog"
+    };
+    translations.he.models = {
+      "HiveShelf90cm": "כוורת 90 ס\"מ",
+      "Cat": "חתול",
+      "Dog": "כלב"
+    };
+
     let currentLang = "en";
-
-    // UI dictionary references
-    function updateLanguage() {
-      const t = translations[currentLang];
-      document.getElementById("main-title").textContent = t.selectModel;
-      document.querySelector("label[for='cat-dropdown']").textContent = t.category;
-      document.querySelector("label[for='model-dropdown']").textContent = t.model;
-      document.querySelector("label[for='color-dropdown']").textContent = t.color;
-      document.getElementById("ar-btn").textContent = t.viewInAR;
-      document.getElementById("screenshot-btn").textContent = t.screenshot;
-      document.getElementById("switcher-btn").textContent = t.switch;
-      // Summary labels
-      document.querySelector("#summary-panel .summary-row:nth-child(1) span").textContent = t.summary.category;
-      document.querySelector("#summary-panel .summary-row:nth-child(2) span").textContent = t.summary.model;
-      document.querySelector("#summary-panel .summary-row:nth-child(3) span").textContent = t.summary.color;
-      // Night mode toggle
-      const nightBtn = document.getElementById("nightToggle");
-      const isNight = document.body.classList.contains("night");
-      nightBtn.innerHTML = isNight ? t.light : t.night;
-      // Language toggle button
-      document.getElementById("langToggle").textContent = t.lang;
-      // Set direction
-      document.body.dir = (currentLang === "he") ? "rtl" : "ltr";
-    }
-
     let CATEGORIES = {};
     let currentCat = "Furniture";
     let currentModelIdx = 0;
     let currentColorIdx = 0;
+
+    function getTranslation(type, key) {
+      // Try translation, fallback to key if not found
+      return translations[currentLang][type][key] || key;
+    }
 
     function renderCategoryDropdown() {
       const catDropdown = document.getElementById("cat-dropdown");
@@ -383,7 +401,7 @@
       Object.keys(CATEGORIES).forEach(cat => {
         const opt = document.createElement('option');
         opt.value = cat;
-        opt.textContent = cat;
+        opt.textContent = getTranslation('categories', cat);
         catDropdown.appendChild(opt);
       });
       catDropdown.value = currentCat;
@@ -395,7 +413,7 @@
       CATEGORIES[category].forEach((model, i) => {
         const opt = document.createElement('option');
         opt.value = String(i);
-        opt.textContent = model.name;
+        opt.textContent = getTranslation('models', model.name);
         modelDropdown.appendChild(opt);
       });
       modelDropdown.selectedIndex = currentModelIdx;
@@ -412,7 +430,7 @@
       colors.forEach((color, i) => {
         const opt = document.createElement('option');
         opt.value = String(i);
-        opt.textContent = color.name || "Default";
+        opt.textContent = getTranslation('colors', color.name || "Default");
         colorDropdown.appendChild(opt);
       });
       colorDropdown.selectedIndex = currentColorIdx;
@@ -427,13 +445,36 @@
       const color = colors[currentColorIdx] || colors[0];
       const mv = document.getElementById('viewer');
       mv.src = color.file;
-      mv.alt = `3D preview of ${model.name} (${color.name || "Default"})`;
-      document.getElementById('viewer-title').textContent = model.name;
-      document.getElementById('sum-cat').textContent = currentCat;
-      document.getElementById('sum-model').textContent = model.name;
-      document.getElementById('sum-color').textContent = color.name || "Default";
-      // Accessibility: update live region
-      document.getElementById('viewer-title').setAttribute('aria-label', model.name);
+      mv.alt = `3D preview of ${getTranslation('models', model.name)} (${getTranslation('colors', color.name || "Default")})`;
+      document.getElementById('viewer-title').textContent = getTranslation('models', model.name);
+      document.getElementById('sum-cat').textContent = getTranslation('categories', currentCat);
+      document.getElementById('sum-model').textContent = getTranslation('models', model.name);
+      document.getElementById('sum-color').textContent = getTranslation('colors', color.name || "Default");
+      document.getElementById('viewer-title').setAttribute('aria-label', getTranslation('models', model.name));
+    }
+
+    function updateLanguage() {
+      const t = translations[currentLang];
+      document.getElementById("main-title").textContent = t.selectModel;
+      document.querySelector("label[for='cat-dropdown']").textContent = t.category;
+      document.querySelector("label[for='model-dropdown']").textContent = t.model;
+      document.querySelector("label[for='color-dropdown']").textContent = t.color;
+      document.getElementById("ar-btn").textContent = t.viewInAR;
+      document.getElementById("screenshot-btn").textContent = t.screenshot;
+      document.getElementById("switcher-btn").textContent = t.switch;
+      document.querySelector("#summary-panel .summary-row:nth-child(1) span").textContent = t.summary.category;
+      document.querySelector("#summary-panel .summary-row:nth-child(2) span").textContent = t.summary.model;
+      document.querySelector("#summary-panel .summary-row:nth-child(3) span").textContent = t.summary.color;
+      const nightBtn = document.getElementById("nightToggle");
+      const isNight = document.body.classList.contains("night");
+      nightBtn.innerHTML = isNight ? t.light : t.night;
+      document.getElementById("langToggle").textContent = t.lang;
+      document.body.dir = (currentLang === "he") ? "rtl" : "ltr";
+      // Update dropdowns and summary with new language
+      renderCategoryDropdown();
+      renderModelDropdown(currentCat);
+      renderColorDropdown(currentCat, currentModelIdx);
+      setModel();
     }
 
     document.getElementById("cat-dropdown").addEventListener("change", function() {
@@ -468,12 +509,10 @@
         updateLanguage();
       });
 
-    // AR Button
     document.getElementById("ar-btn").onclick = () => {
       document.getElementById("viewer").activateAR();
     };
 
-    // Screenshot Button
     document.getElementById("screenshot-btn").onclick = async function () {
       const viewer = document.getElementById("viewer");
       if (!viewer.loaded) await viewer.updateComplete;
@@ -490,7 +529,6 @@
       }, 500);
     };
 
-    // Model Switcher Button (previous/next model in current category)
     document.getElementById("switcher-btn").onclick = function (e) {
       const models = CATEGORIES[currentCat];
       if (models.length < 2) return;
@@ -516,14 +554,12 @@
       }
     });
 
-    // Accessibility: focus indicators for dropdowns
     ["cat-dropdown", "model-dropdown", "color-dropdown"].forEach(id => {
       document.getElementById(id).addEventListener('focus', function() {
         this.setAttribute('aria-activedescendant', this.options[this.selectedIndex].id || '');
       });
     });
 
-    // Night mode toggle
     const nightBtn = document.getElementById("nightToggle");
     nightBtn.addEventListener("click", function() {
       document.body.classList.toggle("night");
@@ -532,13 +568,11 @@
       nightBtn.setAttribute("aria-pressed", isNight);
     });
 
-    // Language switch button
     document.getElementById("langToggle").addEventListener("click", function() {
       currentLang = (currentLang === "en") ? "he" : "en";
       updateLanguage();
     });
 
-    // Accessibility: Allow "m" for next model, "M" for previous model
     document.addEventListener('keydown', function(e) {
       if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "SELECT" || document.activeElement.isContentEditable) return;
       if (e.key === "m") {
@@ -548,7 +582,6 @@
       }
     });
 
-    // Accessibility: Announce when screenshot is downloaded
     document.getElementById("screenshot-btn").addEventListener("click", function() {
       const panel = document.getElementById("summary-panel");
       panel.setAttribute("aria-live", "assertive");
