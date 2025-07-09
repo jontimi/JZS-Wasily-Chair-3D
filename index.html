@@ -11,6 +11,7 @@
             padding: 0;
             overflow: hidden; /* Prevent scrollbars if model-viewer is full screen */
             height: 100vh; /* Make body fill viewport height */
+            width: 100vw;  /* Make body fill viewport width */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,13 +22,20 @@
             height: 100%;
             display: block; /* Important for proper sizing */
             background-color: transparent; /* Ensure model-viewer itself is transparent */
+            /* You can add max-width/max-height here if you don't want it to fill the whole embed space */
+            /* For example: max-width: 500px; max-height: 500px; */
         }
     </style>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
 
-    <model-viewer src="jzs logo optimized.glb" auto-rotate tone-mapping="neutral" poster="poster.webp" shadow-intensity="1">
+    <model-viewer 
+        src="JZS-3D-LOGO.glb" 
+        auto-rotate 
+        tone-mapping="neutral" 
+        poster="poster.webp" 
+        shadow-intensity="1">
     </model-viewer>
 
 </body>
