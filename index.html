@@ -3,79 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Models AR Showcase</title>
+    <title>JZS 3D Logo Viewer</title>
     <style>
-        body { font-family: sans-serif; margin: 20px; text-align: center; }
+        /* Basic styling to make the model-viewer fill the page */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrollbars if model-viewer is full screen */
+            height: 100vh; /* Make body fill viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent; /* Keep background transparent for Framer embed */
+        }
         model-viewer {
             width: 100%;
-            max-width: 800px; /* Limit max width for larger screens */
-            height: 400px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            margin-bottom: 30px;
+            height: 100%;
+            display: block; /* Important for proper sizing */
+            background-color: transparent; /* Ensure model-viewer itself is transparent */
         }
-        h1 { color: #333; }
-        h2 { color: #555; margin-top: 40px; }
     </style>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
-    <h1>My 3D Furniture Collection (Different Format)</h1>
 
-    <h2>BLACK Sofa</h2>
-    <model-viewer
-        src="3d-models-ar-site/models/Sofas/BLACKSofa.glb"  poster="3d-models-ar-site/poster.png"              alt="A stylish black sofa"
-        ar
-        ar-modes="webxr scene-viewer quick-look"
-        camera-controls
-        shadow-intensity="1"
-        exposure="1"
-        environment-image="neutral"
-        bounds="tight"
-        min-field-of-view="40deg"
-        max-field-of-view="40deg">
-    </model-viewer>
-
-    <h2>Dolton Armchair</h2>
-    <model-viewer
-        src="3d-models-ar-site/models/Sofas/dolton_armchair_hudson_grey.glb" poster="3d-models-ar-site/poster.png"                          alt="A comfortable grey armchair"
-        ar
-        ar-modes="webxr scene-viewer quick-look"
-        camera-controls
-        shadow-intensity="1"
-        exposure="1"
-        environment-image="neutral"
-        bounds="tight"
-        min-field-of-view="40deg"
-        max-field-of-view="40deg">
-    </model-viewer>
-
-    <h2>Floor Lamp</h2>
-    <model-viewer
-        src="3d-models-ar-site/models/Lamps/floor_lamp.glb" poster="3d-models-ar-site/poster.png"          alt="A modern floor lamp"
-        ar
-        ar-modes="webxr scene-viewer quick-look"
-        camera-controls
-        shadow-intensity="1"
-        exposure="1"
-        environment-image="neutral"
-        bounds="tight"
-        min-field-of-view="40deg"
-        max-field-of-view="40deg">
-    </model-viewer>
-
-    <h2>Bookcase</h2>
-    <model-viewer
-        src="3d-models-ar-site/models/Cabinets/bookcase.glb" poster="3d-models-ar-site/poster.png"           alt="A classic wooden bookcase"
-        ar
-        ar-modes="webxr scene-viewer quick-look"
-        camera-controls
-        shadow-intensity="1"
-        exposure="1"
-        environment-image="neutral"
-        bounds="tight"
-        min-field-of-view="40deg"
-        max-field-of-view="40deg">
+    <model-viewer src="jzs logo optimized.glb" auto-rotate tone-mapping="neutral" poster="poster.webp" shadow-intensity="1">
     </model-viewer>
 
 </body>
