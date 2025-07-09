@@ -1,2 +1,2 @@
-# 3d-models-ar-site
-Website to share 3D models with AR support
+# JZS-3D-LOGO
+Website to share 3D JZS Logo 
