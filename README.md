@@ -1,2 +1,2 @@
-# JZS-3D-LOGO
-Website to share 3D JZS Logo 
+# Wasily Chair 3D
+Website to share 3D Wasily Chair 3D

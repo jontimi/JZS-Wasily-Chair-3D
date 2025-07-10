@@ -3,38 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JZS 3D Logo Viewer</title>
+    <title>JZS Wasily Chair 3D View</title>
     <style>
-        /* Basic styling to make the model-viewer fill the page */
         body {
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Prevent scrollbars if model-viewer is full screen */
-            height: 100vh; /* Make body fill viewport height */
-            width: 100vw;  /* Make body fill viewport width */
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: transparent; /* Keep background transparent for Framer embed */
+            background-color: #f0f0f0;
         }
         model-viewer {
             width: 100%;
             height: 100%;
-            display: block; /* Important for proper sizing */
-            background-color: transparent; /* Ensure model-viewer itself is transparent */
-            /* You can add max-width/max-height here if you don't want it to fill the whole embed space */
-            /* For example: max-width: 500px; max-height: 500px; */
+            display: block;
+            background-color: #f0f0f0;
+            --poster-color: #f0f0f0;
         }
     </style>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
 
-    <model-viewer 
-        src="JZS-3D-LOGO.glb" 
-        camera-controls  tone-mapping="neutral" 
-        poster="poster.webp" 
-        shadow-intensity="0"  rotation-per-second="0deg" disable-pan disable-zoom >
+    <model-viewer
+        src="wasily_chair.glb"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        camera-controls
+        touch-action="pan-y"
+        shadow-intensity="1"
+        alt="A 3D model of the Wasily Chair"
+        loading="eager"
+        disable-zoom
+        disable-pan
+        exposure="1"
+        field-of-view="30deg"
+        camera-orbit="225deg 75deg 105%" interaction-prompt="none">
     </model-viewer>
 
 </body>
