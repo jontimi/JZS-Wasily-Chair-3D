@@ -16,7 +16,6 @@
             align-items: center;
             background-color: transparent; /* Allows Framer's overlay background to show through */
         }
-        /* The model-placeholder will initially contain the poster image */
         .model-placeholder {
             width: 100%;
             height: 100%;
@@ -33,8 +32,7 @@
             --poster-color: transparent; /* Makes the poster background transparent if needed */
         }
     </style>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-</head>
+    </head>
 <body>
     <div class="model-placeholder" id="model-container">
         <img src="wasily_chair_576_h_tiny_opti.webp"
@@ -43,41 +41,63 @@
     </div>
 
     <script>
-        const modelContainer = document.getElementById('model-container'); // Get the single placeholder element
+        const modelContainer = document.getElementById('model-container');
+        let modelViewerScriptLoaded = false; // Flag to ensure script is loaded only once
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    const placeholder = entry.target; // This is the modelContainer div
-                    
-                    // Create the model-viewer element
-                    const modelElement = document.createElement('model-viewer');
-                    
-                    // Set all the attributes for the model-viewer
-                    modelElement.setAttribute('src', 'wasily_chair.glb');
-                    modelElement.setAttribute('alt', 'A 3D model of the Wasily Chair');
-                    modelElement.setAttribute('camera-controls', ''); // Enables user interaction (move, rotate)
-                    modelElement.setAttribute('touch-action', 'pan-y');
-                    modelElement.setAttribute('shadow-intensity', '1');
-                    // Removed disable-zoom and disable-pan to allow user interaction
-                    modelElement.setAttribute('exposure', '1');
-                    modelElement.setAttribute('field-of-view', '30deg');
-                    modelElement.setAttribute('camera-orbit', '225deg 75deg 105%');
-                    modelElement.setAttribute('interaction-prompt', 'none');
-                    modelElement.setAttribute('poster', 'wasily_chair_576_h_tiny_opti.webp');
-                    modelElement.setAttribute('loading', 'lazy'); // Helps with performance by loading when visible
+                    const placeholder = entry.target;
 
-                    // Replace the placeholder div (and its img) with the new model-viewer element
-                    placeholder.replaceWith(modelElement);
+                    // Load model-viewer script only when the placeholder is visible
+                    if (!modelViewerScriptLoaded) {
+                        const script = document.createElement('script');
+                        script.type = 'module';
+                        script.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js';
+                        document.head.appendChild(script);
+                        modelViewerScriptLoaded = true;
+
+                        // Add an event listener to create the model-viewer once the script is loaded
+                        script.onload = () => {
+                            createAndReplaceModelViewer(placeholder);
+                        };
+                        // In case the script is already cached and loads instantly,
+                        // or if it's already defined (e.g., in a complex framework)
+                        if (window.customElements && window.customElements.get('model-viewer')) {
+                             createAndReplaceModelViewer(placeholder);
+                        }
+
+                    } else {
+                        // If script is already loaded, just create the model-viewer
+                        createAndReplaceModelViewer(placeholder);
+                    }
                     
-                    // Stop observing once the model-viewer is loaded
-                    observer.unobserve(placeholder);
+                    observer.unobserve(placeholder); // Stop observing once handling is initiated
                 }
             });
-        }, { rootMargin: '50px' }); // Load slightly before it's fully visible for a smoother experience
+        }, { rootMargin: '50px' }); // Load slightly before it's fully visible
 
         // Start observing the single modelContainer div
         observer.observe(modelContainer);
+
+        // Function to create and replace the placeholder with model-viewer
+        function createAndReplaceModelViewer(placeholder) {
+            const modelElement = document.createElement('model-viewer');
+            modelElement.setAttribute('src', 'wasily_chair.glb');
+            modelElement.setAttribute('alt', 'A 3D model of the Wasily Chair');
+            modelElement.setAttribute('camera-controls', '');
+            modelElement.setAttribute('touch-action', 'pan-y');
+            modelElement.setAttribute('shadow-intensity', '1');
+            modelElement.setAttribute('exposure', '1');
+            modelElement.setAttribute('field-of-view', '30deg');
+            modelElement.setAttribute('camera-orbit', '225deg 75deg 105%');
+            modelElement.setAttribute('interaction-prompt', 'none');
+            modelElement.setAttribute('poster', 'wasily_chair_576_h_tiny_opti.webp');
+            modelElement.setAttribute('loading', 'lazy'); // model-viewer's internal lazy loading for model data
+            
+            placeholder.replaceWith(modelElement);
+        }
+
     </script>
 </body>
 </html>
