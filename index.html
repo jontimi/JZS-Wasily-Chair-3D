@@ -16,6 +16,14 @@
             align-items: center;
             background-color: transparent;
         }
+        .model-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
         model-viewer {
             width: 100%;
             height: 100%;
@@ -27,21 +35,34 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
+    <div class="model-placeholder" id="model2">Loading Wasilly Chair...</div>
 
-    <model-viewer
-        src="wasily_chair.glb"
-        alt="A 3D model of the Wasily Chair"
-        camera-controls
-        touch-action="pan-y"
-        shadow-intensity="1"
-        loading="eager"
-        disable-zoom
-        disable-pan
-        exposure="1"
-        field-of-view="30deg"
-        camera-orbit="225deg 75deg 105%"
-        interaction-prompt="none">
-    </model-viewer>
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const placeholder = entry.target;
+                    const modelElement = document.createElement('model-viewer');
+                    modelElement.setAttribute('src', 'wasily_chair.glb');
+                    modelElement.setAttribute('alt', 'A 3D model of the Wasily Chair');
+                    modelElement.setAttribute('camera-controls', '');
+                    modelElement.setAttribute('touch-action', 'pan-y');
+                    modelElement.setAttribute('shadow-intensity', '1');
+                    modelElement.setAttribute('disable-zoom', '');
+                    modelElement.setAttribute('disable-pan', '');
+                    modelElement.setAttribute('exposure', '1');
+                    modelElement.setAttribute('field-of-view', '30deg');
+                    modelElement.setAttribute('camera-orbit', '225deg 75deg 105%');
+                    modelElement.setAttribute('interaction-prompt', 'none');
+                    placeholder.replaceWith(modelElement);
+                    observer.unobserve(placeholder);
+                }
+            });
+        }, { rootMargin: '50px' });
 
+        document.querySelectorAll('.model-placeholder').forEach((placeholder) => {
+            observer.observe(placeholder);
+        });
+    </script>
 </body>
 </html>
