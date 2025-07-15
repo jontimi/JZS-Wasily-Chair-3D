@@ -61,8 +61,7 @@
                         script.onload = () => {
                             createAndReplaceModelViewer(placeholder);
                         };
-                        // In case the script is already cached and loads instantly,
-                        // or if it's already defined (e.g., in a complex framework)
+                        // Fallback in case script is already in cache and onload doesn't fire consistently
                         if (window.customElements && window.customElements.get('model-viewer')) {
                              createAndReplaceModelViewer(placeholder);
                         }
@@ -88,6 +87,9 @@
             modelElement.setAttribute('camera-controls', '');
             modelElement.setAttribute('touch-action', 'pan-y');
             modelElement.setAttribute('shadow-intensity', '1');
+            // Re-added disable-zoom and disable-pan as they were in your originally provided index.html
+            modelElement.setAttribute('disable-zoom', '');
+            modelElement.setAttribute('disable-pan', '');
             modelElement.setAttribute('exposure', '1');
             modelElement.setAttribute('field-of-view', '30deg');
             modelElement.setAttribute('camera-orbit', '225deg 75deg 105%');
