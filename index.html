@@ -16,6 +16,14 @@
             align-items: center;
             background-color: transparent; /* Allows Framer's overlay background to show through */
         }
+        .model-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent; /* or your desired placeholder background */
+        }
         model-viewer {
             width: 100%;
             height: 100%;
@@ -27,18 +35,42 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
-    <model-viewer
-        src="wasily_chair.glb"
-        alt="A 3D model of the Wasily Chair"
-        camera-controls
-        touch-action="pan-y"
-        shadow-intensity="1"
-        disable-zoom
-        disable-pan
-        exposure="1"
-        field-of-view="30deg"
-        camera-orbit="225deg 75deg 105%"
-        interaction-prompt="none"
-        poster="wasily_chair_576_h_tiny_opti.webp" loading="eager" ></model-viewer>
+    <div class="model-placeholder" id="model-container">
+        <img src="wasily_chair_576_h_tiny_opti.webp" 
+             alt="Loading Wasily Chair" 
+             style="width: 100%; height: 100%; object-fit: contain; background-color: transparent;">
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const placeholder = entry.target;
+                    const modelElement = document.createElement('model-viewer');
+                    modelElement.setAttribute('src', 'wasily_chair.glb');
+                    modelElement.setAttribute('alt', 'A 3D model of the Wasily Chair');
+                    modelElement.setAttribute('camera-controls', '');
+                    modelElement.setAttribute('touch-action', 'pan-y');
+                    modelElement.setAttribute('shadow-intensity', '1');
+                    modelElement.setAttribute('disable-zoom', '');
+                    modelElement.setAttribute('disable-pan', '');
+                    modelElement.setAttribute('exposure', '1');
+                    modelElement.setAttribute('field-of-view', '30deg');
+                    modelElement.setAttribute('camera-orbit', '225deg 75deg 105%');
+                    modelElement.setAttribute('interaction-prompt', 'none');
+                    modelElement.setAttribute('poster', 'wasily_chair_576_h_tiny_opti.webp'); // Ensure poster on the created element too
+                    modelElement.setAttribute('loading', 'lazy'); // Or 'auto' if preferred, but lazy is explicit
+
+                    placeholder.replaceWith(modelElement);
+                    observer.unobserve(placeholder);
+                }
+            });
+        }, { rootMargin: '50px' }); // Use a rootMargin to preload slightly before it's fully visible
+
+        // Observe the placeholder div
+        document.getElementById('model-container').forEach((placeholder) => {
+             observer.observe(placeholder);
+        });
+    </script>
 </body>
 </html>
